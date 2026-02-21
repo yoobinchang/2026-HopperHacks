@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { mockAnalyzeTrashImage } from '../../utils/mockAnalysis'
+import { analyzeTrashImage } from '../../utils/geminiAnalysis'
 import './UploadPage.css'
 
 export function UploadPage({ user, onBackHome, onGainPoint }) {
@@ -8,22 +8,33 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
   const [analysis, setAnalysis] = useState(null)
   const [hasRecycled, setHasRecycled] = useState(false)
   const [hasRewarded, setHasRewarded] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   function handleFileChange(e) {
     const f = e.target.files?.[0]
     if (!f) return
     setFile(f)
     setAnalysis(null)
+    setError(null)
     setHasRecycled(false)
     setHasRewarded(false)
     const url = URL.createObjectURL(f)
     setPreviewUrl(url)
   }
 
-  function handleAnalyze() {
+  async function handleAnalyze() {
     if (!file) return
-    const result = mockAnalyzeTrashImage(file)
-    setAnalysis(result)
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await analyzeTrashImage(file)
+      setAnalysis(result)
+    } catch (err) {
+      setError(err.message || 'Analysis failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   function handleConfirmRecycle() {
@@ -42,9 +53,6 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
         </button>
         <div>
           <h2 className="page-title">Upload a trash photo</h2>
-          <p className="page-subtitle">
-            Gemini will analyze the trash in your photo and suggest recycling and reuse ideas.
-          </p>
         </div>
       </header>
 
@@ -60,10 +68,12 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
             type="button"
             className="primary-button"
             onClick={handleAnalyze}
+            disabled={loading}
           >
-            Analyze with Gemini (demo)
+            {loading ? 'Analyzing...' : 'Analyze'}
           </button>
         )}
+        {error && <p className="error-text">{error}</p>}
       </section>
 
       {previewUrl && (
@@ -116,19 +126,6 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
         </section>
       )}
 
-      <section className="card small-text">
-        <p>
-          In a real service, this screen would send the image to Gemini and receive results in the JSON schema below.
-        </p>
-        <pre className="code-block">
-          {`{
-  "name": "string",
-  "materials": ["string"],
-  "recyclingMethod": "string",
-  "reuseMethod": "string"
-}`}
-        </pre>
-      </section>
     </div>
   )
 }

@@ -74,6 +74,12 @@
   color: #15803d;
 }
 
+.error-text {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #dc2626;
+}
+
 .code-block {
   background: #0f172a;
   color: #e5e7eb;
