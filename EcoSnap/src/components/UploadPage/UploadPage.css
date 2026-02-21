@@ -19,6 +19,86 @@
   display: none;
 }
 
+.helper-text {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.warning-text {
+  margin: 0;
+  font-size: 13px;
+  color: #b45309;
+}
+
+/* Carousel */
+.carousel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.carousel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-counter {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.carousel-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.carousel-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.carousel-dot:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.carousel-dot-active {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  border-color: #16a34a;
+}
+
+.carousel-dot-duplicate {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #b45309;
+}
+
+.duplicate-badge {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #b45309;
+  font-weight: 500;
+}
+
 .preview-card {
   text-align: left;
 }
