@@ -1,0 +1,84 @@
+.upload-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.upload-area {
+  border-radius: 20px;
+  border: 1px dashed #cbd5f5;
+  background: #f9fafb;
+  padding: 18px;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-area input {
+  display: none;
+}
+
+.preview-card {
+  text-align: left;
+}
+
+.preview-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.preview-image {
+  max-width: 100%;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.result-row {
+  display: flex;
+  gap: 10px;
+}
+
+.result-label {
+  flex: 0 0 96px;
+  color: #6b7280;
+}
+
+.result-value {
+  flex: 1;
+}
+
+.confirm-box {
+  margin-top: 12px;
+  border-radius: 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 12px 12px 10px;
+}
+
+.confirm-box p {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+
+.success-text {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #15803d;
+}
+
+.code-block {
+  background: #0f172a;
+  color: #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 12px;
+  overflow-x: auto;
+}

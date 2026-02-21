@@ -1,0 +1,127 @@
+.tree-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.tree-card-seed {
+  background: linear-gradient(135deg, #fefce8, #ffffff);
+}
+
+.tree-card-sprout {
+  background: linear-gradient(135deg, #dcfce7, #ffffff);
+}
+
+.tree-card-sapling {
+  background: linear-gradient(135deg, #e0f2fe, #ffffff);
+}
+
+.tree-card-big {
+  background: linear-gradient(135deg, #f3e8ff, #ffffff);
+}
+
+.tree-visual {
+  position: relative;
+  height: 180px;
+}
+
+.soil {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 22px;
+  border-radius: 999px;
+  background: #854d0e;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.3);
+}
+
+.seed-dot {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #fbbf24;
+}
+
+.stem {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  border-radius: 999px;
+  background: #16a34a;
+}
+
+.stem-small {
+  height: 40px;
+}
+
+.stem-medium {
+  height: 80px;
+}
+
+.stem-large {
+  height: 110px;
+}
+
+.leaf {
+  position: absolute;
+  bottom: 72px;
+  width: 26px;
+  height: 14px;
+  border-radius: 999px;
+  background: #22c55e;
+}
+
+.leaf-left {
+  left: calc(50% - 20px);
+  transform: rotate(-18deg);
+}
+
+.leaf-right {
+  left: calc(50% - 6px);
+  transform: rotate(18deg);
+}
+
+.crown {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e);
+}
+
+.crown-small {
+  bottom: 80px;
+  width: 90px;
+  height: 90px;
+}
+
+.crown-large {
+  bottom: 80px;
+  width: 140px;
+  height: 140px;
+}
+
+.tree-info h3 {
+  margin: 0 0 6px;
+}
+
+.tree-range {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+@media (max-width: 640px) {
+  .tree-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
