@@ -3,211 +3,203 @@
 /* ── Page shell ── */
 .page {
   background: #e8e0d8;
-  min-height: 100vh;
+  min-height: 100%;
   font-family: "Alice", serif;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0 !important;
 }
 
-/* ── Points pill (ellipse) ── */
-.ellipse-box {
-  width: 80vw;
-  max-width: 420px;
-  margin: 1.5rem auto 0.5rem;
-  padding: 0.75rem 2rem;
+/* ── Header ── */
+.page-header {
+  padding: 1.5rem 1.75rem 0.5rem;
+}
 
+.page-title {
+  font-family: "Alice", serif;
+  font-size: 26px;
+  color: #2d1a10;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-family: "Alice", serif;
+  font-size: 15px;
+  color: #6b5c50;
+  margin: 4px 0 0;
+}
+
+/* ── Points pill ── */
+.ellipse-box {
+  width: 60%;
+  height:5rem;
+  margin: 1.25rem 1.75rem 1.25rem;
+  padding: 1rem 2rem;
   background: #fcfbef;
   border-radius: 999px;
-  box-shadow: 6px 6px 0 rgba(100, 60, 50, 0.35);
-
+  border: 2px solid #c8a898;
+  box-shadow: 12px 12px 0 rgba(100, 60, 50, 0.40);
   text-align: center;
+  margin-bottom:8rem;
+  align-self:center;
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
 }
 
 .points-value {
   margin: 0;
   font-family: "Alice", serif;
-  font-size: clamp(28px, 8vw, 52px);
+  font-size: clamp(36px, 9vw, 60px);
   font-weight: 700;
-  color: #2d1a10;
+  color: var(--color-terracotta);
   letter-spacing: 0.02em;
-  line-height: 1.1;
+  line-height: 0.7;
 }
 
 .points-label {
-  margin: 2px 0 0;
+  margin: 4px 0 0;
   font-family: "Alice", serif;
-  font-size: 13px;
+  font-size: 15px;
   color: #6b5c50;
 }
 
 .points-unit {
-  font-size: 18px;
+  font-size: 20px;
   color: #6b7280;
   margin-left: 4px;
 }
 
-/* ── Watering-can note ── */
-.watering-note {
-  text-align: center;
-  font-family: "Alice", serif;
-  font-size: 11px;
-  color: #5a4a40;
-  line-height: 1.5;
-  margin: 0.25rem 0 0.5rem;
-}
-
-/* ── Tree section wrapper (relative so the can can overlay) ── */
+/* ── Tree section ── */
 .tree-section {
   position: relative;
-  width: 90vw;
-  max-width: 420px;
-  margin: 0 auto 1rem;
+  flex: 1;
+  margin: 0 1.75rem 1.75rem;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ── Watering can + scan button (top-right overlay) ── */
+/* ── Watering can button (top-right overlay) ── */
 .watering-can-area {
   position: absolute;
-  top: -60px;
-  right: -18px;
+  top: -24px;
+  right: -8px;
   z-index: 10;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
-.watering-can-img {
-  width: 90px;
-  transform: scaleX(-1); /* face left toward the tree */
-  filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
-}
-
-/* Watering can SVG fallback */
 .watering-can-svg {
-  width: 90px;
-  height: 70px;
+  width: 100px;
+  height: 78px;
+  filter: drop-shadow(4px 4px 0px rgba(100, 60, 50, 0.3));
+  transition: filter 0.15s;
 }
 
-.scan-btn {
-  background: #fcfbef;
-  border: 2px solid #c8a898;
-  border-radius: 12px;
-  padding: 6px 10px;
+.watering-can-area:hover .watering-can-svg {
+  filter: drop-shadow(5px 5px 0px rgba(100, 60, 50, 0.4));
+}
+
+.scan-label {
   font-family: "Alice", serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: #3d2010;
-  cursor: pointer;
-  box-shadow: 3px 3px 0 rgba(100,60,50,0.3);
+  background: #fcfbef;
+  border: 2px solid #c8a898;
+  border-radius: 10px;
+  padding: 5px 10px;
+  box-shadow: 3px 3px 0 rgba(100,60,50,0.25);
   white-space: nowrap;
-  transition: transform 0.1s, box-shadow 0.1s;
-}
-
-.scan-btn:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 rgba(100,60,50,0.35);
-}
-.scan-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0 rgba(100,60,50,0.3);
+  pointer-events: none;
 }
 
 /* ── Tree image container ── */
 .tree-container {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 12px;
+  width: 80%;
+  height: 50rem;
+  align-self: center;
+  min-height: 320px;
+  border-radius: 18px;
   overflow: hidden;
   border: 2px solid #c8a898;
-  box-shadow: 4px 4px 0 rgba(100,60,50,0.25);
-  background: #b8cfe0; /* sky blue placeholder bg */
+  box-shadow: 12px 12px 0 rgba(100, 60, 50, 0.40);
+  background: #c8d8e8;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.tree-placeholder {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .tree-placeholder-text {
   color: #5a7a9a;
   font-family: "Alice", serif;
-  font-size: 14px;
+  font-size: 16px;
   opacity: 0.6;
 }
 
 /* ── Tree info below ── */
 .tree-info {
   text-align: center;
-  margin-top: 0.75rem;
+  margin-top: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 .tree-name {
   font-family: "Alice", serif;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
-  color: #3d2010;
-  margin: 0 0 2px;
+  color: #2d1a10;
+  margin: 0 0 4px;
 }
 
 .tree-progress {
   font-family: "Alice", serif;
-  font-size: 13px;
+  font-size: 14px;
   color: #6b5c50;
-  margin: 0 0 2px;
+  margin: 0 0 3px;
 }
 
 .tree-cta {
   font-family: "Alice", serif;
-  font-size: 13px;
+  font-size: 14px;
   color: #6b5c50;
   margin: 0;
-}
-
-/* ── Header ── */
-.page-header {
-  padding: 0.75rem 1rem;
-}
-
-.page-title {
-  font-family: "Alice", serif;
-  font-size: 20px;
-  color: #3d2010;
-  margin: 0;
-}
-
-.page-subtitle {
-  font-family: "Alice", serif;
-  font-size: 13px;
-  color: #6b5c50;
-  margin: 2px 0 0;
 }
 
 /* ── Shake animation ── */
 @keyframes wateringShake {
   0%   { transform: rotate(0deg); }
-  20%  { transform: rotate(-12deg); }
-  40%  { transform: rotate(10deg); }
-  60%  { transform: rotate(-8deg); }
+  20%  { transform: rotate(-14deg); }
+  40%  { transform: rotate(11deg); }
+  60%  { transform: rotate(-9deg); }
   80%  { transform: rotate(6deg); }
   100% { transform: rotate(0deg); }
 }
 
-.watering-can-area.shake .watering-can-svg,
-.watering-can-area:hover .watering-can-svg {
+.watering-can-area.shake .watering-can-svg {
   animation: wateringShake 0.6s ease-in-out;
-  transform-origin: bottom center;
+  transform-origin: right center;
 }
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-  .watering-can-area {
-    right: -10px;
-    top: -55px;
+  .ellipse-box {
+    width: calc(100% - 2.5rem);
+    margin: 1rem 1.25rem;
   }
-  .watering-can-img,
+  .tree-section {
+    margin: 0 1.25rem 1.25rem;
+  }
   .watering-can-svg {
-    width: 70px;
+    width: 80px;
+    height: 62px;
   }
 }

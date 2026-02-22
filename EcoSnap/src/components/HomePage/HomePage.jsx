@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { getTreeStage } from "../../utils/tree";
 import "./HomePage.css";
 
-// Inline SVG watering can (pink/mauve, matching screenshot)
 function WateringCan() {
   return (
     <svg
@@ -12,42 +11,39 @@ function WateringCan() {
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* Body */}
-      <rect x="20" y="28" width="52" height="36" rx="8" fill="#e8a0b0" />
-      {/* Spout */}
-      <path d="M72 38 L100 22 L104 30 L76 46 Z" fill="#e8a0b0" />
+      <rect x="38" y="28" width="52" height="36" rx="8" fill="#e8a0b0" />
+      {/* Spout — connects to left edge of body (x=38), faces LEFT */}
+      <path d="M38 36 L16 24 L12 32 L38 44 Z" fill="#e8a0b0" />
       {/* Spout tip */}
-      <ellipse cx="103" cy="26" rx="5" ry="4" fill="#d4809a" />
-      {/* Handle arc */}
+      <ellipse cx="13" cy="28" rx="5" ry="4" fill="#d4809a" />
+      {/* Handle arc — centered over body (x=38 to x=90, midpoint=64) */}
       <path
-        d="M36 28 C36 10, 72 10, 72 28"
+        d="M52 28 C52 10, 78 10, 78 28"
         stroke="#d4809a"
         strokeWidth="6"
         strokeLinecap="round"
         fill="none"
       />
       {/* Label patch */}
-      <rect x="30" y="36" width="32" height="18" rx="4" fill="#f5c0cc" opacity="0.7" />
-      <text x="46" y="49" textAnchor="middle" fontFamily="Alice, serif" fontSize="9" fill="#7a3050">DANA</text>
-      {/* Water drops */}
-      <ellipse cx="108" cy="18" rx="2" ry="3" fill="#a0c8e8" opacity="0.8" />
-      <ellipse cx="102" cy="12" rx="2" ry="3" fill="#a0c8e8" opacity="0.6" />
-      <ellipse cx="113" cy="12" rx="1.5" ry="2.5" fill="#a0c8e8" opacity="0.5" />
+      <rect x="48" y="36" width="32" height="18" rx="4" fill="#f5c0cc" opacity="0.7" />
+      <text x="64" y="49" textAnchor="middle" fontFamily="Alice, serif" fontSize="9" fill="#7a3050">SCAN</text>
+      {/* Water drops — on the left */}
+      <ellipse cx="8" cy="18" rx="2" ry="3" fill="#a0c8e8" opacity="0.8" />
+      <ellipse cx="4" cy="11" rx="2" ry="3" fill="#a0c8e8" opacity="0.6" />
+      <ellipse cx="12" cy="8" rx="1.5" ry="2.5" fill="#a0c8e8" opacity="0.5" />
     </svg>
   );
 }
 
-export function HomePage({ user, onGoTree, onGoUpload }) {
+export function HomePage({ user, onGoUpload }) {
   const stage = getTreeStage(user.points ?? 0);
   const testPoints = 123456789; // TEMPORARY
 
-  // Animated number state
   const [displayPoints, setDisplayPoints] = useState(0);
-
-  // Watering-can shake animation state
   const [isShaking, setIsShaking] = useState(false);
   const shakeIntervalRef = useRef(null);
 
-  // Animate from 0 → user.points
+  // Animate points counter 0 → target
   useEffect(() => {
     // const target = user.points ?? 0;
     const target = testPoints;
@@ -59,15 +55,14 @@ export function HomePage({ user, onGoTree, onGoUpload }) {
     const counter = setInterval(() => {
       frame++;
       const progress = frame / totalFrames;
-      const current = Math.round(target * progress);
-      setDisplayPoints(current);
+      setDisplayPoints(Math.round(target * progress));
       if (frame === totalFrames) clearInterval(counter);
     }, duration / totalFrames);
 
     return () => clearInterval(counter);
   }, [user.points]);
 
-  // Periodic shake every few seconds (as noted in design)
+  // Periodic shake every 3s
   useEffect(() => {
     shakeIntervalRef.current = setInterval(() => {
       setIsShaking(true);
@@ -76,52 +71,40 @@ export function HomePage({ user, onGoTree, onGoUpload }) {
     return () => clearInterval(shakeIntervalRef.current);
   }, []);
 
-  // Points until next stage (placeholder logic — replace with real thresholds)
   const nextStagePoints = stage?.nextThreshold ?? "--";
   const totalNeeded = stage?.totalNeeded ?? "--";
 
+  function handleCanClick() {
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 600);
+    onGoUpload();
+  }
+
   return (
     <div className="page">
-      <header className="page-header">
-        <div>
-          <h2 className="page-title">Hi, {user.username}</h2>
-          <p className="page-subtitle">One more step for the planet today!</p>
-        </div>
-      </header>
-
       {/* Points pill */}
       <div className="ellipse-box">
-        <p className="points-value">
-          {displayPoints.toLocaleString()}
-        </p>
+        <p className="points-value">{displayPoints.toLocaleString()}</p>
         <p className="points-label">Your Points</p>
       </div>
 
-      {/* Note about watering can */}
-      <p className="watering-note">
-        Note: watering can shakes<br />
-        every few seconds,<br />
-        and when you hover over it →
-      </p>
-
-      {/* Tree section with overlaid watering can */}
+      {/* Tree section */}
       <div className="tree-section">
 
-        {/* Watering can + Scan button — top-right overlay */}
-        <div
+        {/* Watering can — clickable button that navigates to scanner */}
+        <button
           className={`watering-can-area${isShaking ? " shake" : ""}`}
+          onClick={handleCanClick}
           onMouseEnter={() => setIsShaking(true)}
           onMouseLeave={() => setIsShaking(false)}
+          aria-label="Scan Trash"
         >
           <WateringCan />
-          <button className="scan-btn" onClick={onGoUpload}>
-            Click to Scan<br />Trash!
-          </button>
-        </div>
+          <span className="scan-label">Click to Scan Trash!</span>
+        </button>
 
-        {/* Tree placeholder container */}
+        {/* Tree placeholder — replace with your 3D model */}
         <div className="tree-container">
-          {/* Replace the below with your 3D tree model */}
           <span className="tree-placeholder-text">[ 3D Tree Model ]</span>
         </div>
 
