@@ -3,24 +3,27 @@
   min-height: 100vh;
   max-width: 960px;
   margin: 0 auto;
-  padding: 32px 20px 24px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 .app-footer {
   margin-top: auto;
   text-align: center;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--color-beige);
+  background: var(--color-terracotta);
+  padding: 12px 20px;
 }
 
-/* Shared page layout */
+/* Shared page layout – beige matches active tab so they blend */
 .page {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  padding: 20px 24px 24px;
+  background: var(--color-beige);
 }
 
 .page-header {
@@ -35,63 +38,102 @@
 
 .page-title {
   margin: 0;
-  font-size: 24px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-dark-brown);
 }
 
 .page-subtitle {
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--color-brown);
+}
+
+/* Points capsule (used on My Tree and Scanner) */
+.points-capsule {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  background: var(--color-beige);
+  border: 2px solid var(--color-border);
+  border-radius: 999px;
+  text-align: center;
+}
+
+.points-capsule-value {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-dark-brown);
+  letter-spacing: 0.02em;
+}
+
+.points-capsule-label {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--color-brown);
 }
 
 /* Shared card */
 .card {
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 24px;
-  border: 1px solid rgba(229, 231, 235, 0.9);
+  background: var(--color-beige);
+  border-radius: 16px;
+  border: 1px solid var(--color-border);
   padding: 20px 18px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
 
-/* Logo (login page) */
+/* Logo */
 .logo-text {
   font-weight: 700;
   font-size: 28px;
   letter-spacing: 0.04em;
+  color: var(--color-dark-brown);
 }
 
 /* Buttons */
 .primary-button {
-  border-radius: 999px;
+  border-radius: 12px;
   border: none;
-  padding: 10px 18px;
+  padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: white;
-  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.35);
+  background: var(--color-muted-brown);
+  color: var(--color-beige);
+}
+
+.primary-button:hover:not(:disabled) {
+  background: var(--color-brown);
 }
 
 .primary-button:disabled {
   opacity: 0.6;
   cursor: default;
-  box-shadow: none;
 }
 
 .secondary-button {
-  border-radius: 999px;
-  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
   padding: 10px 18px;
   font-size: 14px;
   font-weight: 500;
-  background: white;
-  color: #111827;
+  background: var(--color-beige);
+  color: var(--color-dark-brown);
 }
 
-/* Small text block (used on Home, Upload, Tree) */
+.ghost-button {
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-beige);
+  padding: 8px 14px;
+  font-size: 14px;
+  color: var(--color-brown);
+}
+
+/* Small text block */
 .small-text {
   font-size: 13px;
-  color: #4b5563;
+  color: var(--color-brown);
 }
 
 .small-text h4 {
@@ -108,8 +150,13 @@
   margin-bottom: 2px;
 }
 
+.app-shell.login-shell {
+  padding: 32px 20px 24px;
+  justify-content: center;
+}
+
 @media (max-width: 640px) {
-  .app-shell {
-    padding: 20px 14px 18px;
+  .page {
+    padding: 16px;
   }
 }

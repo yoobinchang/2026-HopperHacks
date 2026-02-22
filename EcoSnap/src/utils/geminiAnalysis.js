@@ -3,12 +3,25 @@ import { mockAnalyzeTrashImage } from './mockAnalysis'
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY
 const MODEL = 'gemini-2.5-flash'
 
-const PROMPT = `Analyze this trash/recyclable item in the image. Respond with ONLY a valid JSON object (no markdown, no extra text) with this exact structure:
+const PROMPT = `You are analyzing an image to see if it shows a single trash/recyclable item.
+
+1. First decide: Does this image clearly show one specific piece of trash or recyclable material (e.g. a bottle, can, box, wrapper)? If the image shows no trash, is unclear, shows multiple unrelated items, or is not a photo of trash, set "isValidTrashImage" to false and you may omit other fields.
+
+2. If isValidTrashImage is true, classify the item into exactly one category: "waste" (general waste, non-recyclable, food waste, etc.), "paper and cardboard", "plastics", "metal", or "glass".
+
+Respond with ONLY a valid JSON object (no markdown, no extra text). When the image is valid trash, use this structure:
 {
+  "isValidTrashImage": true,
   "name": "item name (e.g. Plastic Bottle)",
   "materials": ["material1", "material2"],
   "recyclingMethod": "step-by-step recycling instructions",
-  "reuseMethod": "creative reuse ideas"
+  "reuseMethod": "creative reuse ideas",
+  "category": "one of: waste, paper and cardboard, plastics, metal, glass"
+}
+
+When the image does NOT show valid trash, use:
+{
+  "isValidTrashImage": false
 }`
 
 async function fileToBase64(file) {
@@ -82,10 +95,31 @@ export async function analyzeTrashImage(file) {
     data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '{}'
 
   const parsed = parseJsonFromText(text)
+
+  if (parsed.isValidTrashImage === false) {
+    return {
+      isValidTrashImage: false,
+      error: 'Please upload a valid picture of trash. This image could not be recognized as a single trash or recyclable item.',
+    }
+  }
+
+  const VALID_CATEGORIES = ['waste', 'paper and cardboard', 'plastics', 'metal', 'glass']
+  const rawCategory = (parsed.category || '').toLowerCase().trim()
+  let category = VALID_CATEGORIES.find((c) => c === rawCategory)
+  if (!category) {
+    if (/paper|cardboard/.test(rawCategory)) category = 'paper and cardboard'
+    else if (/plastic/.test(rawCategory)) category = 'plastics'
+    else if (/metal/.test(rawCategory)) category = 'metal'
+    else if (/glass/.test(rawCategory)) category = 'glass'
+    else category = 'waste'
+  }
+
   return {
+    isValidTrashImage: true,
     name: parsed.name || 'Unknown',
     materials: Array.isArray(parsed.materials) ? parsed.materials : [parsed.materials ?? 'Unknown'],
     recyclingMethod: parsed.recyclingMethod || 'Check local recycling guidelines.',
     reuseMethod: parsed.reuseMethod || 'Consider reusing or upcycling.',
+    category,
   }
 }

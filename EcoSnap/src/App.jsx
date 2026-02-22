@@ -1,12 +1,13 @@
 import './App.css'
 import { useEffect, useState } from 'react'
 import { loadUsers, saveUsers, loadCurrentUser, saveCurrentUser } from './utils/storage'
-import { LoginPage, HomePage, UploadPage, TreePage, TopBar } from './components'
+import { LoginPage, TreePage, UploadPage, TopBar } from './components'
 
 function App() {
   const [users, setUsers] = useState({})
   const [currentUser, setCurrentUser] = useState(null)
   const [page, setPage] = useState('login')
+  const [activeTab, setActiveTab] = useState('tree')
 
   useEffect(() => {
     const initialUsers = loadUsers()
@@ -73,23 +74,20 @@ function App() {
 
   return (
     <div className="app-shell">
-      <TopBar user={currentUser} onLogout={handleLogout} />
-      {page === 'home' && (
-        <HomePage
-          user={currentUser}
-          onGoTree={() => setPage('tree')}
-          onGoUpload={() => setPage('upload')}
-        />
+      <TopBar
+        user={currentUser}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onLogout={handleLogout}
+      />
+      {activeTab === 'tree' && (
+        <TreePage user={currentUser} onGoScan={() => setActiveTab('scanner')} />
       )}
-      {page === 'upload' && (
+      {activeTab === 'scanner' && (
         <UploadPage
           user={currentUser}
-          onBackHome={() => setPage('home')}
           onGainPoint={() => updateUserPoints(1)}
         />
-      )}
-      {page === 'tree' && (
-        <TreePage user={currentUser} onBackHome={() => setPage('home')} />
       )}
       <footer className="app-footer">
         <p>All users&apos; points combine into one big forest.</p>

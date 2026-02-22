@@ -18,7 +18,7 @@ export function LoginPage({ onLogin }) {
   }
 
   return (
-    <div className="app-shell">
+    <div className="app-shell login-shell">
       <header className="app-header">
         <h1 className="logo-text">EcoSnap</h1>
         <p className="subtitle">Grow a tree with every piece of trash you recycle.</p>

@@ -8,12 +8,15 @@ import {
 } from '../../utils/storage'
 import './UploadPage.css'
 
-export function UploadPage({ user, onBackHome, onGainPoint }) {
-  const [items, setItems] = useState([]) // { id, file, previewUrl, analysis, hasRecycled, hasRewarded, hash, isDuplicate }
+const MAX_IMAGES = 10
+
+export function UploadPage({ user, onGainPoint }) {
+  const [items, setItems] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [hashing, setHashing] = useState(false)
+  const fileInputRef = useRef(null)
 
   const username = user?.username ?? ''
 
@@ -51,12 +54,10 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
       }
 
       setItems((prev) => {
-        prev.forEach((it) => {
-          if (it.previewUrl) URL.revokeObjectURL(it.previewUrl)
-        })
-        return newItems
+        const combined = [...prev, ...newItems].slice(0, MAX_IMAGES)
+        setCurrentIndex(prev.length)
+        return combined
       })
-      setCurrentIndex(0)
       setHashing(false)
       e.target.value = ''
     },
@@ -70,7 +71,12 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
     setError(null)
     try {
       const results = await Promise.all(
-        toAnalyze.map((item) => analyzeTrashImage(item.file)),
+        toAnalyze.map((item) =>
+          analyzeTrashImage(item.file).catch((err) => ({
+            isValidTrashImage: false,
+            error: err.message || 'Analysis failed. Please upload a valid picture of trash.',
+          })),
+        ),
       )
       const byId = Object.fromEntries(
         toAnalyze.map((item, i) => [item.id, results[i]]),
@@ -87,6 +93,29 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
     }
   }, [items])
 
+  const handleClearAll = useCallback(() => {
+    setItems((prev) => {
+      prev.forEach((it) => {
+        if (it.previewUrl) URL.revokeObjectURL(it.previewUrl)
+      })
+      return []
+    })
+    setCurrentIndex(0)
+  }, [])
+
+  const handleRemoveCurrent = useCallback(() => {
+    setItems((prev) => {
+      if (prev.length === 0) return prev
+      const idx = Math.min(currentIndex, prev.length - 1)
+      const removed = prev[idx]
+      if (removed?.previewUrl) URL.revokeObjectURL(removed.previewUrl)
+      const next = prev.filter((_, i) => i !== idx)
+      const newIndex = next.length === 0 ? 0 : Math.min(idx, next.length - 1)
+      setCurrentIndex(newIndex)
+      return next
+    })
+  }, [currentIndex])
+
   const handleConfirmRecycle = useCallback(
     (item) => {
       if (item.hasRewarded) return
@@ -94,6 +123,8 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
         window.alert('This image was already used for points. Upload a different photo.')
         return
       }
+      const category = item.analysis?.category
+      const isWaste = category === 'waste'
       addUploadHash(username, item.hash)
       setItems((prev) =>
         prev.map((it) =>
@@ -102,8 +133,12 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
             : it,
         ),
       )
-      onGainPoint()
-      window.alert('You got 1 point for recycling!')
+      if (isWaste) {
+        window.alert('Waste does not earn points. Thanks for recycling anyway!')
+      } else {
+        onGainPoint()
+        window.alert('You got 1 point for recycling!')
+      }
     },
     [username, onGainPoint],
   )
@@ -124,35 +159,31 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
     items.some((it) => !it.analysis && !it.isDuplicate) &&
     !loading
   const duplicateCount = items.filter((it) => it.isDuplicate).length
+  const canAddMore = items.length < MAX_IMAGES
 
   return (
-    <div className="page">
-      <header className="page-header with-back">
-        <button type="button" className="ghost-button" onClick={onBackHome}>
-          ← Back to Home
-        </button>
-        <div>
-          <h2 className="page-title">Upload a trash photo</h2>
-          <p className="page-subtitle">
-            Upload one or more photos. You can earn 1 point per photo after recycling. Duplicate
-            photos are not allowed.
-          </p>
-        </div>
-      </header>
+    <div className="page upload-page">
+      <section className="points-capsule">
+        <p className="points-capsule-value">{(user.points ?? 0).toLocaleString()}</p>
+        <p className="points-capsule-label">Your Points</p>
+      </section>
 
-      <section className="card upload-card">
-        <label className="upload-area">
+      <section className="card upload-card theme-upload">
+        <h2 className="upload-heading">Upload photos of your trash</h2>
+        <p className="upload-description">
+          Add one photo at a time or select multiple at once (up to {MAX_IMAGES}). Each is saved and
+          can be analyzed. You can earn 1 point per photo after recycling. Duplicate photos are not allowed.
+        </p>
+        <label className="upload-area theme-upload-area">
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             multiple
             onChange={handleFileChange}
+            disabled={!canAddMore}
           />
-          <span>
-            {items.length
-              ? 'Add more photos or choose different ones'
-              : 'Select or take photos of your trash (multiple allowed)'}
-          </span>
+          <span>Click here to select pictures of your trash!</span>
         </label>
         {hashing && <p className="helper-text">Checking for duplicates…</p>}
         {duplicateCount > 0 && (
@@ -161,73 +192,120 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
             won&apos;t earn more.
           </p>
         )}
+
         {items.length > 0 && (
-          <button
-            type="button"
-            className="primary-button"
-            onClick={handleAnalyze}
-            disabled={!canAnalyze}
-          >
-            {loading ? 'Analyzing…' : 'Analyze selected photos'}
-          </button>
+          <>
+            <div className="thumbnail-strip-wrap">
+              <div className="thumbnail-strip">
+                {items.map((it, i) => (
+                  <button
+                    key={it.id}
+                    type="button"
+                    className={`thumbnail-slot ${i === currentIndex ? 'thumbnail-slot-selected' : ''} ${it.isDuplicate ? 'thumbnail-slot-duplicate' : ''}`}
+                    onClick={() => setCurrentIndex(i)}
+                  >
+                    <img src={it.previewUrl} alt="" />
+                  </button>
+                ))}
+                {canAddMore && (
+                  <button
+                    type="button"
+                    className="thumbnail-slot thumbnail-slot-add"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    +
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="upload-actions-row">
+              <button
+                type="button"
+                className="primary-button theme-button"
+                onClick={handleAnalyze}
+                disabled={!canAnalyze}
+              >
+                {loading ? 'Analyzing…' : 'Analyze'}
+              </button>
+              <div className="photo-nav-buttons">
+                <button
+                  type="button"
+                  className="ghost-button nav-arrow"
+                  onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
+                  disabled={currentIndex === 0}
+                  aria-label="Previous photo"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  className="ghost-button nav-arrow"
+                  onClick={() => setCurrentIndex((i) => Math.min(items.length - 1, i + 1))}
+                  disabled={currentIndex === items.length - 1}
+                  aria-label="Next photo"
+                >
+                  ›
+                </button>
+                <button
+                  type="button"
+                  className="ghost-button nav-action-btn"
+                  onClick={handleRemoveCurrent}
+                  disabled={items.length === 0}
+                  aria-label="Remove this photo"
+                >
+                  Remove
+                </button>
+                <button
+                  type="button"
+                  className="ghost-button nav-action-btn"
+                  onClick={handleClearAll}
+                  disabled={items.length === 0}
+                >
+                  Clear images
+                </button>
+              </div>
+            </div>
+          </>
         )}
         {error && <p className="error-text">{error}</p>}
       </section>
 
-      {items.length > 0 && (
-        <>
-          <section className="card carousel-card">
-            <div className="carousel-nav">
-              <button
-                type="button"
-                className="ghost-button carousel-btn"
-                onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-                disabled={currentIndex === 0}
-              >
-                ← Prev
-              </button>
-              <span className="carousel-counter">
-                Photo {currentIndex + 1} of {items.length}
-              </span>
-              <button
-                type="button"
-                className="ghost-button carousel-btn"
-                onClick={() => setCurrentIndex((i) => Math.min(items.length - 1, i + 1))}
-                disabled={currentIndex === items.length - 1}
-              >
-                Next →
-              </button>
-            </div>
-            <div className="carousel-dots">
-              {items.map((it, i) => (
-                <button
-                  key={it.id}
-                  type="button"
-                  className={`carousel-dot ${i === currentIndex ? 'carousel-dot-active' : ''} ${it.isDuplicate ? 'carousel-dot-duplicate' : ''}`}
-                  onClick={() => setCurrentIndex(i)}
-                  title={it.isDuplicate ? 'Already used for points' : `Photo ${i + 1}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <section className="card preview-card">
-            <h3>Photo {currentIndex + 1}</h3>
-            {currentItem?.isDuplicate && (
-              <p className="duplicate-badge">Already used for points</p>
-            )}
+      {items.length > 0 && currentItem && (
+        <section className="card preview-card theme-preview">
+          <h3 className="preview-heading">Photo {currentIndex + 1}</h3>
+          <div className="preview-frame">
             <img
-              src={currentItem?.previewUrl}
+              src={currentItem.previewUrl}
               alt={`Uploaded trash ${currentIndex + 1}`}
               className="preview-image"
             />
-          </section>
+          </div>
+          {currentItem?.isDuplicate && (
+            <p className="duplicate-badge">Already used for points</p>
+          )}
+        </section>
+      )}
 
-          {currentItem?.analysis && (
-            <section className="card result-card">
-              <h3>Analysis result (photo {currentIndex + 1})</h3>
+      {currentItem?.analysis && (
+        <section className="card result-card theme-result">
+          <h3>Analysis result (photo {currentIndex + 1})</h3>
+          {currentItem.analysis.isValidTrashImage === false ? (
+            <div className="analysis-error-box">
+              <p className="analysis-error-text">
+                {currentItem.analysis.error || 'Please upload a valid picture of trash.'}
+              </p>
+              <p className="analysis-error-hint">
+                Other photos in your list can still be analyzed and earn points.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="result-row">
+                <span className="result-label">Type</span>
+                <span className="result-value result-category">
+                  {currentItem.analysis.category || '—'}
+                </span>
+              </div>
               <div className="result-row">
                 <span className="result-label">Name</span>
                 <span className="result-value">{currentItem.analysis.name}</span>
@@ -252,12 +330,14 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
                   {currentItem.analysis.reuseMethod}
                 </span>
               </div>
-
-              <div className="confirm-box">
+              {currentItem.analysis.category === 'waste' && (
+                <p className="waste-no-points-note">Waste does not earn points.</p>
+              )}
+              <div className="confirm-box theme-confirm">
                 <p>Did you actually recycle this trash?</p>
                 <button
                   type="button"
-                  className="primary-button"
+                  className="primary-button theme-button"
                   onClick={() => handleConfirmRecycle(currentItem)}
                   disabled={currentItem.hasRewarded}
                 >
@@ -267,13 +347,15 @@ export function UploadPage({ user, onBackHome, onGainPoint }) {
                 </button>
                 {currentItem.hasRecycled && (
                   <p className="success-text">
-                    Nice work! You earned +1 point and your tree grew a little.
+                    {currentItem.analysis.category === 'waste'
+                      ? 'Thanks for recycling! (Waste does not earn points.)'
+                      : 'Nice work! You earned +1 point and your tree grew a little.'}
                   </p>
                 )}
               </div>
-            </section>
+            </>
           )}
-        </>
+        </section>
       )}
     </div>
   )

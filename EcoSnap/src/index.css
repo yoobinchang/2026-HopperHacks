@@ -1,14 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
 :root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    sans-serif;
+  font-family: 'Alice', serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #0f172a;
-  background: radial-gradient(circle at top, #bbf7d0 0, #eff6ff 40%, #ffffff 80%);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Earthy theme */
+  --color-dark-brown: #3d3229;
+  --color-brown: #5d4e37;
+  --color-muted-brown: #8b7355;
+  --color-beige: #f5f0e6;
+  --color-cream: #e8e2d9;
+  --color-bg: #e2ddd4;
+  --color-border: #5d4e37;
+  --color-terracotta: #9a5e58;
+  --color-terracotta-dark: #7d4d48;
 }
 
 *,
@@ -21,6 +31,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  color: var(--color-dark-brown);
+  background: var(--color-bg);
 }
 
 #root {

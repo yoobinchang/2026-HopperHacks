@@ -1,103 +1,48 @@
-import { useMemo } from 'react'
-import { getTreeStage } from '../../utils/tree'
+import { getTreeStage, getStageProgress } from '../../utils/tree'
 import './TreePage.css'
 
-export function TreePage({ user, onBackHome }) {
+export function TreePage({ user, onGoScan }) {
   const points = user.points ?? 0
   const stage = getTreeStage(points)
+  const progress = getStageProgress(points)
 
-  const stageInfo = useMemo(
-    () => ({
-      seed: {
-        title: 'Seed stage',
-        description: 'A great first step: thinking before you throw things away.',
-        range: '0–5 pts',
-      },
-      sprout: {
-        title: 'Sprout stage',
-        description: 'Recycling is becoming a habit. A small sprout has appeared.',
-        range: '6–10 pts',
-      },
-      sapling: {
-        title: 'Sapling stage',
-        description: 'Thanks to you, a forest is growing. Keep going!',
-        range: '11–20 pts',
-      },
-      big: {
-        title: 'Big tree stage',
-        description:
-          'Amazing! You are already an eco hero. Your tree is tall and lush.',
-        range: '20+ pts',
-      },
-    }),
-    [],
-  )
-
-  const info = stageInfo[stage]
+  const stageLabel =
+    stage === 'seed'
+      ? 'Seed'
+      : stage === 'sprout'
+        ? 'Sprout'
+        : stage === 'sapling'
+          ? 'Sapling'
+          : 'Sakura Tree'
 
   return (
     <div className="page">
-      <header className="page-header with-back">
-        <button type="button" className="ghost-button" onClick={onBackHome}>
-          ← 홈으로
-        </button>
-        <div>
-          <h2 className="page-title">My tree</h2>
-          <p className="page-subtitle">
-            Every user&apos;s actions connect to form one big forest.
-          </p>
-        </div>
-      </header>
-
-      <section className={`card tree-card tree-card-${stage}`}>
-        <div className="tree-visual">
-          {stage === 'seed' && (
-            <>
-              <div className="soil" />
-              <div className="seed-dot" />
-            </>
-          )}
-          {stage === 'sprout' && (
-            <>
-              <div className="soil" />
-              <div className="stem stem-small" />
-              <div className="leaf leaf-left" />
-              <div className="leaf leaf-right" />
-            </>
-          )}
-          {stage === 'sapling' && (
-            <>
-              <div className="soil" />
-              <div className="stem stem-medium" />
-              <div className="crown crown-small" />
-            </>
-          )}
-          {stage === 'big' && (
-            <>
-              <div className="soil" />
-              <div className="stem stem-large" />
-              <div className="crown crown-large" />
-            </>
-          )}
-        </div>
-        <div className="tree-info">
-          <h3>{info.title}</h3>
-          <p className="tree-range">
-            Stage: {info.range} / Your points: {points}
-          </p>
-          <p>{info.description}</p>
-        </div>
+      <section className="points-capsule">
+        <p className="points-capsule-value">{points.toLocaleString()}</p>
+        <p className="points-capsule-label">Your Points</p>
       </section>
 
-      <section className="card small-text">
-        <h4>Stage thresholds</h4>
-        <ul>
-          <li>0–5 pts: Seed</li>
-          <li>6–10 pts: Sprout</li>
-          <li>11–20 pts: Sapling</li>
-          <li>20+ pts: Big Tree</li>
-        </ul>
-        <p>The more trash you upload and recycle, the more your tree grows.</p>
+      <section className="tree-placeholder-card card">
+        <div className="tree-placeholder-wrapper">
+          <div className="tree-placeholder-frame">
+            {/* Placeholder for 3D-modeled tree – replace this div with your image or component */}
+            <div className="tree-placeholder-fallback">
+              Tree placeholder — add your 3D tree image here
+            </div>
+          </div>
+          <button
+            type="button"
+            className="primary-button scan-cta-button"
+            onClick={onGoScan}
+          >
+            Click to Scan Trash!
+          </button>
+        </div>
+        <p className="tree-placeholder-title">{stageLabel}</p>
+        <p className="tree-placeholder-progress">
+          points until next stage: {progress.next != null ? `${progress.current}/${progress.next}` : `${progress.current}/20+`}
+        </p>
+        <p className="tree-placeholder-cta">Scan and recycle trash to earn more points!</p>
       </section>
     </div>
   )
