@@ -138,6 +138,10 @@
   justify-content: center;
 }
 
+.tree-container-3d {
+  position: relative;
+}
+
 .tree-placeholder-text {
   color: #5a7a9a;
   font-family: "Alice", serif;

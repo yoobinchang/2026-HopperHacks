@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getTreeStage } from "../../utils/tree";
+import TreeScene from "../TreeScene/TreeScene";
 import "./HomePage.css";
 
 function WateringCan() {
@@ -35,9 +36,8 @@ function WateringCan() {
   );
 }
 
-export function HomePage({ user, onGoUpload }) {
+export function HomePage({ user, onGoUpload, onTreeStateChange }) {
   const stage = getTreeStage(user.points ?? 0);
-  const testPoints = 123456789; // TEMPORARY
 
   const [displayPoints, setDisplayPoints] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
@@ -45,8 +45,7 @@ export function HomePage({ user, onGoUpload }) {
 
   // Animate points counter 0 → target
   useEffect(() => {
-    // const target = user.points ?? 0;
-    const target = testPoints;
+    const target = user.points ?? 0;
     const duration = 2000;
     const frameRate = 60;
     const totalFrames = Math.round((duration / 1000) * frameRate);
@@ -103,9 +102,16 @@ export function HomePage({ user, onGoUpload }) {
           <span className="scan-label">Click to Scan Trash!</span>
         </button>
 
-        {/* Tree placeholder — replace with your 3D model */}
-        <div className="tree-container">
-          <span className="tree-placeholder-text">[ 3D Tree Model ]</span>
+        {/* 3D tree scene — points from scans, bank used to water/plant */}
+        <div className="tree-container tree-container-3d">
+          <TreeScene
+            embedded
+            userPoints={user.points ?? 0}
+            userBank={user.treeBank ?? user.points ?? 0}
+            userTrees={user.trees}
+            onBankChange={(bank) => onTreeStateChange?.(bank, user.trees)}
+            onTreesChange={(trees) => onTreeStateChange?.(user.treeBank ?? user.points ?? 0, trees)}
+          />
         </div>
 
         {/* Tree info */}
