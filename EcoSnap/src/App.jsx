@@ -1,10 +1,18 @@
 import './App.css'
 import { useEffect, useState } from 'react'
 import { loadUsers, saveUsers, loadCurrentUser, saveCurrentUser } from './utils/storage'
-import { LoginPage, UploadPage, TopBar } from './components'
+import { LoginPage, UploadPage, TopBar, ProgressPage } from './components'
 import { HomePage } from './components/HomePage/HomePage'
 
 const DEFAULT_TREE = { id: 0, x: 0, z: 0, paletteId: 'sakura', displayStage: 1 }
+
+const DEFAULT_RECYCLING_STATS = {
+  Plastic: 0,
+  'Paper & cardboard': 0,
+  Glass: 0,
+  Metals: 0,
+  Waste: 0,
+}
 
 function ensureTreeState(user) {
   if (!user) return user
@@ -13,6 +21,7 @@ function ensureTreeState(user) {
     ...user,
     treeBank: user.treeBank ?? points,
     trees: Array.isArray(user.trees) && user.trees.length > 0 ? user.trees : [DEFAULT_TREE],
+    recyclingStats: { ...DEFAULT_RECYCLING_STATS, ...user.recyclingStats },
   }
 }
 
@@ -52,6 +61,7 @@ function App() {
         points: 0,
         treeBank: 0,
         trees: [DEFAULT_TREE],
+        recyclingStats: { ...DEFAULT_RECYCLING_STATS },
       })
       nextUsers[username] = newUser
       setUsers(nextUsers)
@@ -102,6 +112,28 @@ function App() {
     saveCurrentUser(updatedUser)
   }
 
+  // points + recyclingStats를 한 번에 업데이트 (race condition 방지)
+  function handleRecycleItem(category) {
+    if (!currentUser) return
+    const isWaste = category === 'Waste'
+    const pointsDelta = isWaste ? 0 : 5
+    const updatedUser = {
+      ...currentUser,
+      points: (currentUser.points ?? 0) + pointsDelta,
+      treeBank: (currentUser.treeBank ?? currentUser.points ?? 0) + pointsDelta,
+      recyclingStats: {
+        ...DEFAULT_RECYCLING_STATS,
+        ...currentUser.recyclingStats,
+        [category]: (currentUser.recyclingStats?.[category] ?? 0) + 1,
+      },
+    }
+    const nextUsers = { ...users, [updatedUser.username]: updatedUser }
+    setUsers(nextUsers)
+    setCurrentUser(updatedUser)
+    saveUsers(nextUsers)
+    saveCurrentUser(updatedUser)
+  }
+
   if (!currentUser || page === 'login') {
     return <LoginPage onLogin={handleLogin} />
   }
@@ -124,8 +156,12 @@ function App() {
       {activeTab === 'scanner' && (
         <UploadPage
           user={currentUser}
-          onGainPoint={() => updateUserPoints(5)}
+          onGainPoint={() => {}} // handleRecycleItem에서 points도 함께 처리하므로 no-op
+          onRecycleItem={handleRecycleItem}
         />
+      )}
+      {activeTab === 'progress' && (
+        <ProgressPage user={currentUser} />
       )}
       <footer className="app-footer">
         <p>All users&apos; points combine into one big forest.</p>

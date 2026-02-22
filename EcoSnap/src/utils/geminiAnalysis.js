@@ -7,7 +7,12 @@ const PROMPT = `You are analyzing an image to see if it shows a single trash/rec
 
 1. First decide: Does this image clearly show one specific piece of trash or recyclable material (e.g. a bottle, can, box, wrapper)? If the image shows no trash, is unclear, shows multiple unrelated items, or is not a photo of trash, set "isValidTrashImage" to false and you may omit other fields.
 
-2. If isValidTrashImage is true, classify the item into exactly one category: "waste" (general waste, non-recyclable, food waste, etc.), "paper and cardboard", "plastics", "metal", or "glass".
+2. If isValidTrashImage is true, classify the item into exactly ONE of these categories (use the exact string):
+- "waste" – general waste, non-recyclable, food waste, mixed or unknown
+- "plastic" – plastics, bottles, wrappers, containers
+- "paper and cardboard" – paper, cardboard, cartons
+- "glass" – glass bottles, jars
+- "metals" – metal cans, foil, scrap metal
 
 Respond with ONLY a valid JSON object (no markdown, no extra text). When the image is valid trash, use this structure:
 {
@@ -16,7 +21,7 @@ Respond with ONLY a valid JSON object (no markdown, no extra text). When the ima
   "materials": ["material1", "material2"],
   "recyclingMethod": "step-by-step recycling instructions",
   "reuseMethod": "creative reuse ideas",
-  "category": "one of: waste, paper and cardboard, plastics, metal, glass"
+  "category": "exactly one of: waste, plastic, paper and cardboard, glass, metals"
 }
 
 When the image does NOT show valid trash, use:
@@ -103,13 +108,13 @@ export async function analyzeTrashImage(file) {
     }
   }
 
-  const VALID_CATEGORIES = ['waste', 'paper and cardboard', 'plastics', 'metal', 'glass']
+  const VALID_CATEGORIES = ['waste', 'plastic', 'paper and cardboard', 'glass', 'metals']
   const rawCategory = (parsed.category || '').toLowerCase().trim()
   let category = VALID_CATEGORIES.find((c) => c === rawCategory)
   if (!category) {
     if (/paper|cardboard/.test(rawCategory)) category = 'paper and cardboard'
-    else if (/plastic/.test(rawCategory)) category = 'plastics'
-    else if (/metal/.test(rawCategory)) category = 'metal'
+    else if (/plastic/.test(rawCategory)) category = 'plastic'
+    else if (/metal/.test(rawCategory)) category = 'metals'
     else if (/glass/.test(rawCategory)) category = 'glass'
     else category = 'waste'
   }

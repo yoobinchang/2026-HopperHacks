@@ -126,24 +126,23 @@
 
 .nav-tab {
   flex: 1;
-  padding: 14px 20px 18px;
-  font-size: 25px;
+  padding: 16px 20px 20px;
+  font-size: 19px;
   font-weight: 700;
   border: none;
   cursor: pointer;
-  background: var(--color-copperRose);
+  background: var(--color-terracotta);
   color: var(--color-beige);
   border-radius: 14px 14px 0 0;
-  font-family: "Alice", serif;
-  transition: background 0.15s;
+  transition: all 0.2s ease;
+  letter-spacing: -0.01em;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
-.nav-tab:first-of-type {
-  margin-left: 10rem;
-}
-
-.nav-tab:last-of-type {
-  margin-right: 10rem;
+.nav-tabs-row {
+  justify-content: center;
+  gap: 0;
 }
 
 

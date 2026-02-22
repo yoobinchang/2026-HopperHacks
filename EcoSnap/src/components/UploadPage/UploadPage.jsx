@@ -10,7 +10,7 @@ import './UploadPage.css'
 
 const MAX_IMAGES = 10
 
-export function UploadPage({ user, onGainPoint }) {
+export function UploadPage({ user, onGainPoint, onRecycleItem }) {
   const [items, setItems] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -116,6 +116,17 @@ export function UploadPage({ user, onGainPoint }) {
     })
   }, [currentIndex])
 
+  const normalizeCategory = useCallback((category) => {
+    if (!category) return 'Waste'
+    const categoryLower = category.toLowerCase().trim()
+
+    if (categoryLower === 'plastics' || categoryLower === 'plastic') return 'Plastic'
+    if (categoryLower === 'paper and cardboard' || categoryLower === 'paper & cardboard') return 'Paper & cardboard'
+    if (categoryLower === 'glass') return 'Glass'
+    if (categoryLower === 'metal' || categoryLower === 'metals') return 'Metals'
+    return 'Waste'
+  }, [])
+
   const handleConfirmRecycle = useCallback(
     (item) => {
       if (item.hasRewarded) return
@@ -123,8 +134,11 @@ export function UploadPage({ user, onGainPoint }) {
         window.alert('This image was already used for points. Upload a different photo.')
         return
       }
-      const category = item.analysis?.category
-      const isWaste = category === 'waste'
+
+      const category = item.analysis?.category || 'waste'
+      const finalCategory = normalizeCategory(category)
+      const isWaste = finalCategory === 'Waste'
+
       addUploadHash(username, item.hash)
       setItems((prev) =>
         prev.map((it) =>
@@ -133,14 +147,19 @@ export function UploadPage({ user, onGainPoint }) {
             : it,
         ),
       )
+
+      // points + recyclingStats 를 App.js 에서 한 번에 처리
+      if (onRecycleItem) {
+        onRecycleItem(finalCategory)
+      }
+
       if (isWaste) {
         window.alert('Waste does not earn points. Thanks for recycling anyway!')
       } else {
-        onGainPoint()
-        window.alert('You got 1 point for recycling!')
+        window.alert('You got 5 points for recycling!')
       }
     },
-    [username, onGainPoint],
+    [username, onRecycleItem, normalizeCategory],
   )
 
   const itemsRef = useRef([])
@@ -172,7 +191,7 @@ export function UploadPage({ user, onGainPoint }) {
         <h2 className="upload-heading">Upload photos of your trash</h2>
         <p className="upload-description">
           Add one photo at a time or select multiple at once (up to {MAX_IMAGES}). Each is saved and
-          can be analyzed. You can earn 1 point per photo after recycling. Duplicate photos are not allowed.
+          can be analyzed. You can earn 5 points per photo after recycling. Duplicate photos are not allowed.
         </p>
         <label className="upload-area theme-upload-area">
           <input
@@ -303,7 +322,7 @@ export function UploadPage({ user, onGainPoint }) {
               <div className="result-row">
                 <span className="result-label">Type</span>
                 <span className="result-value result-category">
-                  {currentItem.analysis.category || '—'}
+                  {normalizeCategory(currentItem.analysis.category || 'waste')}
                 </span>
               </div>
               <div className="result-row">
@@ -330,7 +349,7 @@ export function UploadPage({ user, onGainPoint }) {
                   {currentItem.analysis.reuseMethod}
                 </span>
               </div>
-              {currentItem.analysis.category === 'waste' && (
+              {normalizeCategory(currentItem.analysis.category || 'waste') === 'Waste' && (
                 <p className="waste-no-points-note">Waste does not earn points.</p>
               )}
               <div className="confirm-box theme-confirm">
@@ -347,9 +366,9 @@ export function UploadPage({ user, onGainPoint }) {
                 </button>
                 {currentItem.hasRecycled && (
                   <p className="success-text">
-                    {currentItem.analysis.category === 'waste'
+                    {normalizeCategory(currentItem.analysis.category || 'waste') === 'Waste'
                       ? 'Thanks for recycling! (Waste does not earn points.)'
-                      : 'Nice work! You earned +1 point and your tree grew a little.'}
+                      : 'Nice work! You earned +5 points and your tree grew a little.'}
                   </p>
                 )}
               </div>

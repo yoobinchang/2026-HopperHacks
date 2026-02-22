@@ -66,6 +66,13 @@ export function TopBar({ user, activeTab, onTabChange, onLogout }) {
         >
           Scanner
         </button>
+        <button
+          type="button"
+          className={`nav-tab ${activeTab === 'progress' ? 'nav-tab-active' : ''}`}
+          onClick={() => onTabChange('progress')}
+        >
+          Progress
+        </button>
       </nav>
     </header>
   )
