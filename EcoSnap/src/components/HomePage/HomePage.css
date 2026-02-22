@@ -30,23 +30,25 @@
   margin: 4px 0 0;
 }
 
-/* ── Points pill ── */
+/* ── Points pill (glass + brown shadow) ── */
 .ellipse-box {
   width: 60%;
-  height:5rem;
+  height: 5rem;
   margin: 1.25rem 1.75rem 1.25rem;
   padding: 1rem 2rem;
-  background: #fcfbef;
   border-radius: 999px;
-  border: 2px solid #c8a898;
-  box-shadow: 12px 12px 0 rgba(100, 60, 50, 0.40);
+  border: 2px solid rgba(200, 168, 152, 0.9);
+  box-shadow: 12px 12px 0 rgba(100, 60, 50, 0.40), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
   text-align: center;
-  margin-bottom:8rem;
-  align-self:center;
-  display:flex;
-  flex-direction:column;
+  margin-bottom: 8rem;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: rgba(252, 251, 239, 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .points-value {
@@ -92,9 +94,13 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
+  padding: 10px 14px 8px;
+  background: rgba(252, 251, 239, 0.4);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 2px solid rgba(200, 168, 152, 0.7);
+  border-radius: 14px;
+  box-shadow: 6px 6px 0 rgba(100, 60, 50, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
 .watering-can-svg {
@@ -113,11 +119,13 @@
   font-size: 13px;
   font-weight: 700;
   color: #3d2010;
-  background: #fcfbef;
-  border: 2px solid #c8a898;
+  background: rgba(252, 251, 239, 0.5);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 2px solid rgba(200, 168, 152, 0.9);
   border-radius: 10px;
   padding: 5px 10px;
-  box-shadow: 3px 3px 0 rgba(100,60,50,0.25);
+  box-shadow: 3px 3px 0 rgba(100, 60, 50, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
   white-space: nowrap;
   pointer-events: none;
 }
@@ -140,6 +148,65 @@
 
 .tree-container-3d {
   position: relative;
+  cursor: pointer;
+}
+
+/* Bottom-left hint: double-click for full screen / to exit (glass + brown shadow) */
+.tree-fullscreen-hint {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 2;
+  pointer-events: none;
+  font-family: "Alice", serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(45, 26, 16, 0.9);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  background: rgba(252, 251, 239, 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 0.4rem 0.75rem;
+  border-radius: 10px;
+  border: 2px solid rgba(200, 168, 152, 0.9);
+  box-shadow: 3px 3px 0 rgba(100, 60, 50, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+/* Full-screen overlay */
+.tree-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #c8d8e8;
+  cursor: pointer;
+}
+
+.tree-fullscreen-overlay .tree-fullscreen-hint {
+  z-index: 1001;
+}
+
+.tree-fullscreen-exit-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1001;
+  font-family: "Alice", serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2d1a10;
+  background: rgba(252, 251, 239, 0.45);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(200, 168, 152, 0.9);
+  box-shadow: 4px 4px 0 rgba(100, 60, 50, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+}
+
+.tree-fullscreen-exit-btn:hover {
+  background: rgba(252, 251, 239, 0.6);
+  box-shadow: 5px 5px 0 rgba(100, 60, 50, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 
 .tree-placeholder-text {

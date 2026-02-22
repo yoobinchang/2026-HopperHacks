@@ -41,6 +41,7 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
 
   const [displayPoints, setDisplayPoints] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const shakeIntervalRef = useRef(null);
 
   // Animate points counter 0 → target
@@ -70,9 +71,6 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
     return () => clearInterval(shakeIntervalRef.current);
   }, []);
 
-  const nextStagePoints = stage?.nextThreshold ?? "--";
-  const totalNeeded = stage?.totalNeeded ?? "--";
-
   function handleCanClick() {
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 600);
@@ -84,7 +82,7 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
       {/* Points pill */}
       <div className="ellipse-box">
         <p className="points-value">{displayPoints.toLocaleString()}</p>
-        <p className="points-label">Your Points</p>
+        <p className="points-label">All Time Points</p>
       </div>
 
       {/* Tree section */}
@@ -102,25 +100,65 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
           <span className="scan-label">Click to Scan Trash!</span>
         </button>
 
-        {/* 3D tree scene — points from scans, bank used to water/plant */}
-        <div className="tree-container tree-container-3d">
-          <TreeScene
-            embedded
-            userPoints={user.points ?? 0}
-            userBank={user.treeBank ?? user.points ?? 0}
-            userTrees={user.trees}
-            onBankChange={(bank) => onTreeStateChange?.(bank, user.trees)}
-            onTreesChange={(trees) => onTreeStateChange?.(user.treeBank ?? user.points ?? 0, trees)}
-          />
+        {/* 3D tree scene — double-click for full screen */}
+        <div
+          className="tree-container tree-container-3d"
+          onDoubleClick={() => setIsFullScreen(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === "Enter" && e.detail >= 2 && setIsFullScreen(true)}
+          aria-label="Double-click for full screen"
+        >
+          <div className="tree-fullscreen-hint" aria-hidden="true">
+            Double-click for full screen
+          </div>
+          {!isFullScreen && (
+            <TreeScene
+              embedded
+              userPoints={user.points ?? 0}
+              userBank={user.treeBank ?? user.points ?? 0}
+              userTrees={user.trees}
+              onBankChange={(bank) => onTreeStateChange?.(bank, user.trees)}
+              onTreesChange={(trees) => onTreeStateChange?.(user.treeBank ?? user.points ?? 0, trees)}
+            />
+          )}
         </div>
+
+        {/* Full-screen overlay — double-click to exit */}
+        {isFullScreen && (
+          <div
+            className="tree-fullscreen-overlay"
+            onDoubleClick={() => setIsFullScreen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Tree view — double-click to exit"
+          >
+            <div className="tree-fullscreen-hint">Double-click to exit</div>
+            <button
+              type="button"
+              className="tree-fullscreen-exit-btn"
+              onClick={() => setIsFullScreen(false)}
+              aria-label="Exit full screen"
+            >
+              Exit
+            </button>
+            <TreeScene
+              embedded
+              userPoints={user.points ?? 0}
+              userBank={user.treeBank ?? user.points ?? 0}
+              userTrees={user.trees}
+              onBankChange={(bank) => onTreeStateChange?.(bank, user.trees)}
+              onTreesChange={(trees) => onTreeStateChange?.(user.treeBank ?? user.points ?? 0, trees)}
+            />
+          </div>
+        )}
 
         {/* Tree info */}
         <div className="tree-info">
-          <p className="tree-name">{stage?.name ?? "Sakura Tree"}</p>
-          <p className="tree-progress">
-            points until next stage: {nextStagePoints} / {totalNeeded}
+          <p className="tree-name">{stage?.name ?? "Your Forest"}</p>
+          <p className="tree-cta">Scan and recycle trash to earn more points!
+            Click into your forest to add and customize trees.
           </p>
-          <p className="tree-cta">Scan and recycle trash to earn more points!</p>
         </div>
       </div>
     </div>

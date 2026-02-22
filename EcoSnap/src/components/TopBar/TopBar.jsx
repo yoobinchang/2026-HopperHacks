@@ -17,8 +17,11 @@ export function TopBar({ user, activeTab, onTabChange, onLogout }) {
 
   return (
     <header className="top-bar theme-bar">
+      <div className="top-bar-cover" aria-hidden="true" />
       <div className="top-bar-row top-bar-row-main">
-        <span className="logo-text">EcoSnap</span>
+        <div className="top-bar-title-glass">
+          <span className="logo-text">EcoSnap</span>
+        </div>
         <div className="top-bar-right" ref={menuRef}>
         <button
           type="button"
@@ -64,6 +67,13 @@ export function TopBar({ user, activeTab, onTabChange, onLogout }) {
           onClick={() => onTabChange('scanner')}
         >
           Scanner
+        </button>
+        <button
+          type="button"
+          className={`nav-tab ${activeTab === 'stats' ? 'nav-tab-active' : ''}`}
+          onClick={() => onTabChange('stats')}
+        >
+          My Stats
         </button>
       </nav>
     </header>

@@ -10,7 +10,7 @@ html, body, #root {
   width: 100%;
 }
 
-/* Layout */
+/* Layout: brown background peeks through around cream content block */
 .app-shell {
   min-height: 100vh;
   width: 100%;
@@ -18,7 +18,45 @@ html, body, #root {
   padding: 0;
   display: flex;
   flex-direction: column;
+  background: var(--color-terracotta-dark, #7d4d48);
+}
+
+/* Content block: cream block; side margins match nav tab insets (1.5rem) so block aligns with tabs */
+.content-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   background: #e8e0d8;
+  border-radius: 18px 18px 0 0;
+  margin: 0 0 0 1.5rem;
+  transition: margin 0.35s ease;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.content-block[data-tab="scanner"] {
+  margin: 0;
+}
+
+.content-block[data-tab="stats"] {
+  margin: 0 1.5rem 0 0;
+}
+
+.content-block-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  animation: contentFadeIn 0.3s ease;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .app-footer {
@@ -26,7 +64,7 @@ html, body, #root {
   text-align: center;
   font-size: 14px;
   color: #fcfbef;
-  background: #9a5e58;
+  background: var(--color-terracotta-dark, #7d4d48);
   padding: 14px 20px;
   font-family: "Alice", serif;
 }
