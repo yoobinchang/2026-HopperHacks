@@ -134,10 +134,11 @@ export function UploadPage({ user, onGainPoint }) {
         ),
       )
       if (isWaste) {
+        onGainPoint(0, category)
         window.alert('Waste does not earn points. Thanks for recycling anyway!')
       } else {
-        onGainPoint()
-        window.alert('You got 1 point for recycling!')
+        onGainPoint(5, category)
+        window.alert('You got 5 points for recycling!')
       }
     },
     [username, onGainPoint],

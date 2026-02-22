@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
+.stats-page {
+  padding: 1.5rem 1.75rem 2rem;
+}
+
+.stats-page .page-title {
+  font-family: "Alice", serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2d1a10;
+  margin: 0 0 4px;
+}
+
+.stats-page .page-subtitle {
+  font-family: "Alice", serif;
+  font-size: 15px;
+  color: #6b5c50;
+  margin: 0;
+}
+
+.stats-summary-card {
+  background: rgba(252, 251, 239, 0.5);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 2px solid rgba(200, 168, 152, 0.9);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 6px 6px 0 rgba(100, 60, 50, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.stats-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stats-total-value {
+  font-family: "Alice", serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-terracotta);
+  line-height: 1;
+}
+
+.stats-total-label {
+  font-family: "Alice", serif;
+  font-size: 14px;
+  color: #6b5c50;
+}
+
+.stats-chart-section {
+  margin-top: 1rem;
+}
+
+.stats-chart-title {
+  font-family: "Alice", serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2d1a10;
+  margin: 0 0 1rem;
+}
+
+.stats-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stats-bar-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2.5rem;
+  align-items: center;
+  gap: 12px;
+}
+
+.stats-bar-label {
+  font-family: "Alice", serif;
+  font-size: 14px;
+  color: #2d1a10;
+  min-width: 0;
+}
+
+.stats-bar-track {
+  height: 28px;
+  background: rgba(200, 168, 152, 0.25);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(200, 168, 152, 0.5);
+}
+
+.stats-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #9a5e58 0%, #b8736d 100%);
+  border-radius: 8px;
+  transition: width 0.4s ease;
+}
+
+.stats-bar-fill-waste {
+  background: linear-gradient(90deg, #6b705c 0%, #8b8f7a 100%);
+}
+
+.stats-bar-value {
+  font-family: "Alice", serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2d1a10;
+  text-align: right;
+}
+
+.stats-empty {
+  font-family: "Alice", serif;
+  font-size: 15px;
+  color: #6b5c50;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+@media (max-width: 520px) {
+  .stats-bar-row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .stats-bar-label {
+    grid-column: 1 / -1;
+  }
+
+  .stats-bar-value {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: right;
+  }
+
+  .stats-bar-track {
+    grid-column: 1;
+  }
+}

@@ -71,9 +71,6 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
     return () => clearInterval(shakeIntervalRef.current);
   }, []);
 
-  const nextStagePoints = stage?.nextThreshold ?? "--";
-  const totalNeeded = stage?.totalNeeded ?? "--";
-
   function handleCanClick() {
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 600);
@@ -85,7 +82,7 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
       {/* Points pill */}
       <div className="ellipse-box">
         <p className="points-value">{displayPoints.toLocaleString()}</p>
-        <p className="points-label">Your Points</p>
+        <p className="points-label">All Time Points</p>
       </div>
 
       {/* Tree section */}
@@ -158,11 +155,10 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
 
         {/* Tree info */}
         <div className="tree-info">
-          <p className="tree-name">{stage?.name ?? "Sakura Tree"}</p>
-          <p className="tree-progress">
-            points until next stage: {nextStagePoints} / {totalNeeded}
+          <p className="tree-name">{stage?.name ?? "Your Forest"}</p>
+          <p className="tree-cta">Scan and recycle trash to earn more points!
+            Click into your forest to add and customize trees.
           </p>
-          <p className="tree-cta">Scan and recycle trash to earn more points!</p>
         </div>
       </div>
     </div>
