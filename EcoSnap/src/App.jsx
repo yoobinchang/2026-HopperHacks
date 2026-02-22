@@ -1,7 +1,8 @@
 import './App.css'
 import { useEffect, useState } from 'react'
 import { loadUsers, saveUsers, loadCurrentUser, saveCurrentUser } from './utils/storage'
-import { LoginPage, TreePage, UploadPage, TopBar } from './components'
+import { LoginPage, UploadPage, TopBar } from './components'
+import { HomePage } from './components/HomePage/HomePage'
 
 function App() {
   const [users, setUsers] = useState({})
@@ -81,7 +82,10 @@ function App() {
         onLogout={handleLogout}
       />
       {activeTab === 'tree' && (
-        <TreePage user={currentUser} onGoScan={() => setActiveTab('scanner')} />
+        <HomePage
+          user={currentUser}
+          onGoUpload={() => setActiveTab('scanner')}
+        />
       )}
       {activeTab === 'scanner' && (
         <UploadPage

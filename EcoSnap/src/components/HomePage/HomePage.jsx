@@ -36,7 +36,7 @@ function WateringCan() {
   );
 }
 
-export function HomePage({ user, onGoUpload }) {
+export function HomePage({ user, onGoTree, onGoUpload }) {
   const stage = getTreeStage(user.points ?? 0);
   const testPoints = 123456789; // TEMPORARY
 
