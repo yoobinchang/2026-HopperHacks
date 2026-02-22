@@ -35,21 +35,13 @@
   line-height: 1.35;
   text-align: center;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  margin-left:-1rem;
+  margin-bottom:2rem;
 }
 
 .floating-cat-bubble:hover {
   transform: translateY(-2px);
   box-shadow: 5px 5px 0 rgba(100, 60, 50, 0.3);
-}
-
-.floating-cat-bubble::after {
-  content: "";
-  position: absolute;
-  left: 1.25rem;
-  bottom: -10px;
-  border: 10px solid transparent;
-  border-top-color: rgba(200, 168, 152, 0.9);
-  border-left-width: 0;
 }
 
 .floating-cat-bubble-close {
@@ -111,8 +103,11 @@
 }
 
 .floating-raccoon-icon {
-  width: 64px;
-  height: 64px;
+  width: 100px;
+  height: 100px;
+  margin-left:2rem;
+  margin-bottom:2rem;
+  object-fit: contain;
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
 }
 
@@ -121,27 +116,31 @@
 }
 
 .floating-raccoon-sleeping-wrap {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
 }
 
 .floating-cat-asleep .floating-raccoon-sleeping-wrap .floating-raccoon-icon {
-  width: 48px;
-  height: 48px;
+  width: 100px;
+  height: 100px;
+  margin-left: 2;
+  margin-bottom: 2;
 }
 
-/* Zzz drifting particles when sleeping */
+/* Zzz drifting particles when sleeping — visible above the raccoon */
 .zzz-particles {
   position: absolute;
-  top: 50%;
+  top: 100%;
   left: 50%;
-  width: 56px;
-  height: 56px;
-  margin: -28px 0 0 -28px;
+  width: 64px;
+  height: 100px;
+  margin: -110px 0 0 -25px;
   pointer-events: none;
+  z-index: 1;
 }
 
 .zzz {
@@ -154,11 +153,11 @@
   animation: zzzDrift 2.2s ease-in-out infinite;
 }
 
-.zzz-1 { top: 8px;  left: 18px; animation-delay: 0s; }
-.zzz-2 { top: 4px;  left: 28px; animation-delay: 0.3s; font-size: 12px; }
-.zzz-3 { top: 12px; left: 38px; animation-delay: 0.6s; }
-.zzz-4 { top: 2px;  left: 22px; animation-delay: 0.9s; font-size: 9px; }
-.zzz-5 { top: 10px; left: 34px; animation-delay: 1.2s; }
+.zzz-1 { top: 4px;  left: 22px; animation-delay: 0s; }
+.zzz-2 { top: 0;    left: 32px; animation-delay: 0.3s; font-size: 12px; }
+.zzz-3 { top: 8px;  left: 42px; animation-delay: 0.6s; }
+.zzz-4 { top: -2px; left: 26px; animation-delay: 0.9s; font-size: 9px; }
+.zzz-5 { top: 6px;  left: 38px; animation-delay: 1.2s; }
 
 @keyframes zzzDrift {
   0%, 100% {

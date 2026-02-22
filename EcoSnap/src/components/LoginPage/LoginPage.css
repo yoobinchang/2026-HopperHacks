@@ -3,13 +3,13 @@
 }
 
 .app-header .logo-text {
-  color: var(--color-dark-brown);
+  color: var(--color-beige);
 }
 
 .subtitle {
   margin-top: 4px;
   font-size: 14px;
-  color: var(--color-brown);
+  color: var(--color-beige);
 }
 
 .login-card {

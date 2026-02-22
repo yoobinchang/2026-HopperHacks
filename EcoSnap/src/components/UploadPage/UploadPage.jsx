@@ -28,7 +28,7 @@ function TreeUploadIcon() {
         fill="#c4b5a4"
       />
       {/* Bushy canopy: overlapping soft shapes for a fuller tree */}
-      <ellipse cx="60" cy="35" rx="38" ry="32" stroke="#9a8b7a" strokeWidth="2" fill="none" opacity="0.9" />
+      <ellipse cx="60" cy="40" rx="38" ry="30" stroke="#9a8b7a" strokeWidth="2" fill="none" opacity="0.9" />
       <ellipse cx="45" cy="48" rx="22" ry="20" stroke="#9a8b7a" strokeWidth="1.8" fill="none" opacity="0.85" />
       <ellipse cx="78" cy="48" rx="22" ry="20" stroke="#9a8b7a" strokeWidth="1.8" fill="none" opacity="0.85" />
       <ellipse cx="60" cy="55" rx="28" ry="24" stroke="#9a8b7a" strokeWidth="1.8" fill="none" opacity="0.9" />
@@ -289,9 +289,6 @@ export function UploadPage({ user, onGainPoint }) {
                   ›
                 </button>
               </div>
-              <p className="upload-note">
-                Note: only allow up to ten images; if the pictures overflow in the x direction, allow the user to scroll (hide the scrollbar) and shrink all pictures to the same height but not same width. Turn the images that the user isn&apos;t currently viewing to opacity 50%. Allow the user to click on the arrow buttons or the image of the item to navigate.
-              </p>
             </div>
             <div className="upload-actions-row upload-actions-row-extra">
               <button

@@ -59,7 +59,7 @@ export function TopBar({ user, activeTab, onTabChange, onLogout }) {
           className={`nav-tab ${activeTab === 'tree' ? 'nav-tab-active' : ''}`}
           onClick={() => onTabChange('tree')}
         >
-          My Tree
+          My Forest
         </button>
         <button
           type="button"

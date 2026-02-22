@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import raccoonImg from '../../assets/raccoon.png'
+import raccoonyImg from '../../assets/raccoony.png'
 import './FloatingCat.css'
 
 const FUN_FACTS = [
@@ -19,57 +21,16 @@ const FUN_FACTS = [
   'Food waste in landfills produces methane, a greenhouse gas 25x more potent than CO₂.',
 ]
 
-/* Cute raccoon using site palette: browns, cream, terracotta accents */
+/* Raccoon assets: raccoon = sleeping, raccoony = awake */
 function RaccoonIcon({ asleep }) {
-  const maskFill = '#e8e2d9'
-  const furFill = '#5d4e37'
-  const furDark = '#3d3229'
-  const bellyFill = '#f5f0e6'
-  const eyeFill = asleep ? furFill : furDark
+  const src = asleep ? raccoonImg : raccoonyImg
   return (
-    <svg
+    <img
+      src={src}
+      alt=""
       className={`floating-raccoon-icon ${asleep ? 'floating-raccoon-asleep' : ''}`}
-      viewBox="0 0 80 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
       aria-hidden
-    >
-      {/* Tail (striped) */}
-      <path d="M58 56 Q72 48 70 36 Q68 26 62 44" stroke={furDark} strokeWidth="5" fill="none" strokeLinecap="round" />
-      <path d="M60 52 Q70 44 69 38" stroke={maskFill} strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      {/* Body */}
-      <ellipse cx="40" cy="52" rx="20" ry="16" fill={furFill} stroke={furDark} strokeWidth="1.5" />
-      <ellipse cx="40" cy="54" rx="14" ry="8" fill={bellyFill} />
-      {/* Head */}
-      <circle cx="40" cy="30" r="17" fill={furFill} stroke={furDark} strokeWidth="1.5" />
-      {/* Bandit mask */}
-      <path d="M24 28 Q22 34 26 38 Q32 36 40 36 Q48 36 54 38 Q58 34 56 28 Q52 22 40 24 Q28 22 24 28 Z" fill={maskFill} stroke={furDark} strokeWidth="1" />
-      {/* Ears */}
-      <ellipse cx="26" cy="18" rx="8" ry="10" fill={furFill} stroke={furDark} strokeWidth="1.5" />
-      <ellipse cx="54" cy="18" rx="8" ry="10" fill={furFill} stroke={furDark} strokeWidth="1.5" />
-      <ellipse cx="26" cy="18" rx="4" ry="5" fill={furDark} />
-      <ellipse cx="54" cy="18" rx="4" ry="5" fill={furDark} />
-      {/* Eyes: open or closed (sleeping) */}
-      {asleep ? (
-        <>
-          <path d="M32 30 Q36 32 40 30" stroke={furDark} strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M40 30 Q44 32 48 30" stroke={furDark} strokeWidth="2" fill="none" strokeLinecap="round" />
-          {/* Z's */}
-          <text x="28" y="48" fontSize="8" fill={furDark} fontFamily="Alice, serif">z</text>
-          <text x="38" y="52" fontSize="10" fill={furDark} fontFamily="Alice, serif">z</text>
-          <text x="48" y="46" fontSize="7" fill={furDark} fontFamily="Alice, serif">z</text>
-        </>
-      ) : (
-        <>
-          <ellipse cx="34" cy="30" rx="3.5" ry="4" fill={eyeFill} />
-          <ellipse cx="46" cy="30" rx="3.5" ry="4" fill={eyeFill} />
-          <circle cx="35" cy="29" r="0.8" fill="white" />
-          <circle cx="47" cy="29" r="0.8" fill="white" />
-        </>
-      )}
-      {/* Nose */}
-      <ellipse cx="40" cy="37" rx="3" ry="2.5" fill={furDark} />
-    </svg>
+    />
   )
 }
 

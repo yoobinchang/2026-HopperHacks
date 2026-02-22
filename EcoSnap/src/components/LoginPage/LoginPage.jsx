@@ -21,7 +21,7 @@ export function LoginPage({ onLogin }) {
     <div className="app-shell login-shell">
       <header className="app-header">
         <h1 className="logo-text">EcoSnap</h1>
-        <p className="subtitle">Grow a tree with every piece of trash you recycle.</p>
+        <p className="subtitle">Make recycling simple and fun!</p>
       </header>
       <main className="card login-card">
         <h2>Log In / Sign Up</h2>
@@ -52,7 +52,7 @@ export function LoginPage({ onLogin }) {
         </form>
       </main>
       <footer className="app-footer">
-        <p>Snap your trash and grow your tree. 🌱</p>
+        <p>Snap a pic of your trash, recycle, and grow a forest!</p>
       </footer>
     </div>
   )
