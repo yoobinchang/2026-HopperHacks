@@ -1,6 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+/* counter box */
 .highlight-card {
-  background: radial-gradient(circle at top left, #dcfce7 0, #ffffff 40%);
+  width: 100vw; /* full screen width */
+  margin-left: calc(50% - 50vw); /* align with screen edges */
+  padding: 2rem;
+
+  position: relative; /* required for overlay */
+  overflow: hidden;   /* keeps overlay inside */
+  background-size: 120%;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+.highlight-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* THIS is the key */
+  background: #9a5e58cc; /* hex with 80% opacity */
+  z-index: 1;
+}
+.highlight-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.ellipse-box {
+  width: 80vw;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+
+  background: #fcfbef;
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.4);
+
+  text-align: center;
+}
+
+.points-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.points-label {
+  margin: 0;
+  font-family: "Alice", serif;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.points-value {
+  margin: 2px 0 0;
+  font-family: "Alice", serif;
+  font-size: 64px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/*----------------------*/
+
 
 .actions-card {
   display: flex;
@@ -16,25 +79,6 @@
 
 .actions-grid button {
   flex: 1;
-}
-
-.points-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.points-label {
-  margin: 0;
-  font-size: 14px;
-  color: #6b7280;
-}
-
-.points-value {
-  margin: 2px 0 0;
-  font-size: 32px;
-  font-weight: 700;
 }
 
 .points-unit {

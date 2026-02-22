@@ -1,8 +1,39 @@
-import { getTreeStage } from '../../utils/tree'
-import './HomePage.css'
+import { useState, useEffect } from "react";
+import { getTreeStage } from "../../utils/tree";
+import "./HomePage.css";
+import treePattern from "../../assets/tree.pattern.jpg";
 
 export function HomePage({ user, onGoTree, onGoUpload }) {
-  const stage = getTreeStage(user.points ?? 0)
+  const stage = getTreeStage(user.points ?? 0);
+  const testPoints = 123456789; // TEMPORARY
+
+  // Animated number state
+  const [displayPoints, setDisplayPoints] = useState(0);
+
+  // Animate from 0 → user.points
+  useEffect(() => {
+   // const target = user.points ?? 0;
+    const target = testPoints;
+    const duration = 2000; // 2 seconds
+    const frameRate = 60;
+    const totalFrames = Math.round((duration / 1000) * frameRate);
+
+    let frame = 0;
+
+    const counter = setInterval(() => {
+      frame++;
+      const progress = frame / totalFrames;
+      const current = Math.round(target * progress);
+
+      setDisplayPoints(current);
+
+      if (frame === totalFrames) {
+        clearInterval(counter);
+      }
+    }, duration / totalFrames);
+
+    return () => clearInterval(counter);
+  }, [user.points]);
 
   return (
     <div className="page">
@@ -12,51 +43,29 @@ export function HomePage({ user, onGoTree, onGoUpload }) {
           <p className="page-subtitle">One more step for the planet today!</p>
         </div>
       </header>
-      <section className="card highlight-card">
-        <div className="points-row">
-          <div>
-            <p className="points-label">Total pieces of trash recycled</p>
-            <p className="points-value">
-              {user.points ?? 0}
-              <span className="points-unit">items</span>
-            </p>
-          </div>
-          <div className={`tree-pill tree-pill-${stage}`}>
-            <span className="tree-emoji">
-              {stage === 'seed' && '🌱'}
-              {stage === 'sprout' && '🌿'}
-              {stage === 'sapling' && '🌳'}
-              {stage === 'big' && '🌳'}
-            </span>
-            <span className="tree-label">
-              {stage === 'seed' && 'Seed (0–5 pts)'}
-              {stage === 'sprout' && 'Sprout (6–10 pts)'}
-              {stage === 'sapling' && 'Sapling (11–20 pts)'}
-              {stage === 'big' && 'Big Tree (20+ pts)'}
-            </span>
+
+      <section
+        className="card highlight-card"
+        style={{ backgroundImage: `url(${treePattern})` }}
+      >
+        <div className="ellipse-box">
+          <div className="points-row">
+
+            {/* LEFT COLUMN — value + label */}
+            <div className="points-col">
+              <p className="points-value">
+                {displayPoints}
+                <span className="points-unit"> items</span>
+              </p>
+
+              <p className="points-label">
+                Total pieces of trash recycled
+              </p>
+            </div>
+
           </div>
         </div>
-      </section>
-
-      <section className="card actions-card">
-        <h3>What would you like to do?</h3>
-        <div className="actions-grid">
-          <button type="button" className="primary-button" onClick={onGoUpload}>
-            Upload a trash photo
-          </button>
-          <button type="button" className="secondary-button" onClick={onGoTree}>
-            View my tree
-          </button>
-        </div>
-      </section>
-
-      <section className="card small-text">
-        <h4>Point rules</h4>
-        <ul>
-          <li>Upload a trash photo and confirm that you recycled it to earn 1 point.</li>
-          <li>0–5 pts: Seed → 6–10 pts: Sprout → 11–20 pts: Sapling → 20+ pts: Big Tree</li>
-        </ul>
       </section>
     </div>
-  )
+  );
 }
