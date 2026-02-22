@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
+/* Fixed bottom-left, visible on all tabs */
+.floating-cat-wrap {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  pointer-events: none;
+}
+
+.floating-cat-wrap > * {
+  pointer-events: auto;
+}
+
+/* Speech bubble */
+.floating-cat-bubble {
+  position: relative;
+  max-width: 180px;
+  padding: 0.5rem 0.75rem;
+  background: rgba(252, 251, 239, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(200, 168, 152, 0.9);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 rgba(100, 60, 50, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  font-family: "Alice", serif;
+  font-size: 13px;
+  color: #2d1a10;
+  line-height: 1.35;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.floating-cat-bubble:hover {
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 rgba(100, 60, 50, 0.3);
+}
+
+.floating-cat-bubble::after {
+  content: "";
+  position: absolute;
+  left: 1.25rem;
+  bottom: -10px;
+  border: 10px solid transparent;
+  border-top-color: rgba(200, 168, 152, 0.9);
+  border-left-width: 0;
+}
+
+.floating-cat-bubble-close {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.35rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-brown);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.floating-cat-bubble-close:hover {
+  background: rgba(200, 168, 152, 0.3);
+  color: var(--color-dark-brown);
+}
+
+.floating-cat-bubble-text {
+  display: block;
+  padding-right: 1rem;
+}
+
+/* When asleep: only the small raccoon button shows */
+.floating-cat-asleep .floating-cat-bubble {
+  display: none;
+}
+
+/* Raccoon button */
+.floating-cat-button {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-cat-button:hover {
+  transform: scale(1.08);
+}
+
+.floating-cat-button:active {
+  transform: scale(0.98);
+}
+
+.floating-raccoon-icon {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.floating-raccoon-asleep {
+  opacity: 0.9;
+}
+
+.floating-raccoon-sleeping-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.floating-cat-asleep .floating-raccoon-sleeping-wrap .floating-raccoon-icon {
+  width: 48px;
+  height: 48px;
+}
+
+/* Zzz drifting particles when sleeping */
+.zzz-particles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  pointer-events: none;
+}
+
+.zzz {
+  position: absolute;
+  font-family: "Alice", serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-muted-brown);
+  opacity: 0.85;
+  animation: zzzDrift 2.2s ease-in-out infinite;
+}
+
+.zzz-1 { top: 8px;  left: 18px; animation-delay: 0s; }
+.zzz-2 { top: 4px;  left: 28px; animation-delay: 0.3s; font-size: 12px; }
+.zzz-3 { top: 12px; left: 38px; animation-delay: 0.6s; }
+.zzz-4 { top: 2px;  left: 22px; animation-delay: 0.9s; font-size: 9px; }
+.zzz-5 { top: 10px; left: 34px; animation-delay: 1.2s; }
+
+@keyframes zzzDrift {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(-5deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-14px) translateX(4px) rotate(2deg);
+    opacity: 0.9;
+  }
+}
+
+.floating-cat-icon {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Facts modal */
+.floating-cat-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(45, 26, 16, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.floating-cat-modal {
+  max-width: 380px;
+  width: 100%;
+  padding: 1.5rem 1.75rem;
+  background: rgba(252, 251, 239, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(200, 168, 152, 0.95);
+  border-radius: 18px;
+  box-shadow: 8px 8px 0 rgba(100, 60, 50, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  font-family: "Alice", serif;
+}
+
+.floating-cat-modal-title {
+  margin: 0 0 0.75rem;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d1a10;
+}
+
+.floating-cat-modal-fact {
+  margin: 0 0 1.25rem;
+  font-size: 15px;
+  color: #3d3229;
+  line-height: 1.5;
+}
+
+.floating-cat-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.floating-cat-modal-next,
+.floating-cat-modal-close {
+  font-family: "Alice", serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.floating-cat-modal-next {
+  background: var(--color-terracotta, #9a5e58);
+  color: #fcfbef;
+  border: none;
+}
+
+.floating-cat-modal-next:hover {
+  background: #7d4d48;
+}
+
+.floating-cat-modal-close {
+  background: transparent;
+  color: #5d4e37;
+  border: 2px solid rgba(200, 168, 152, 0.9);
+}
+
+.floating-cat-modal-close:hover {
+  background: rgba(232, 226, 217, 0.6);
+}

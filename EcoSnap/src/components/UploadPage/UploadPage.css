@@ -4,17 +4,7 @@
   padding-bottom: 2.5rem;
 }
 
-.upload-page-points {
-  margin-bottom: 2rem;
-}
-
-.upload-page .points-capsule {
-  background: rgba(252, 251, 239, 0.45);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 2px solid rgba(200, 168, 152, 0.9);
-  box-shadow: 6px 6px 0 rgba(100, 60, 50, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
-}
+/* Points pill on Scanner uses .ellipse-box (same as My Tree) from HomePage.css */
 
 /* Upload card: same width as 3D tree window (80%), centered */
 .upload-page-card {
@@ -251,6 +241,65 @@
   background: var(--color-beige);
 }
 
+.upload-page .result-card.upload-page-result-card {
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+  width: 80%;
+  align-self: center;
+  padding: 2rem 2rem 2.25rem;
+  background: rgba(252, 251, 239, 0.6);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 2px dashed var(--color-border);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 rgba(100, 60, 50, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.result-card-heading {
+  margin: 0 0 1.25rem;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-dark-brown);
+  font-family: "Alice", serif;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Alice", serif;
+  margin-bottom: 1rem;
+}
+
+.result-table th,
+.result-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(200, 168, 152, 0.4);
+}
+
+.result-table tr:last-child th,
+.result-table tr:last-child td {
+  border-bottom: none;
+}
+
+.result-table th {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-brown);
+  width: 38%;
+}
+
+.result-table td {
+  font-size: 15px;
+  color: var(--color-dark-brown);
+  line-height: 1.45;
+}
+
+.result-table .result-category {
+  text-transform: capitalize;
+}
+
 .upload-page .result-card {
   margin-top: 2rem;
   width: 80%;
@@ -283,7 +332,7 @@
   font-weight: 500;
 }
 
-/* Result card theme */
+/* Result card theme (fallback when not using upload-page-result-card) */
 .result-card.theme-result {
   background: var(--color-beige);
   border: 1px solid var(--color-border);

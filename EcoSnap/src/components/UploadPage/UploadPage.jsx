@@ -205,10 +205,10 @@ export function UploadPage({ user, onGainPoint }) {
 
   return (
     <div className="page upload-page">
-      <section className="points-capsule upload-page-points">
-        <p className="points-capsule-value">{(user.points ?? 0).toLocaleString()}</p>
-        <p className="points-capsule-label">Your Points</p>
-      </section>
+      <div className="ellipse-box">
+        <p className="points-value">{(user.points ?? 0).toLocaleString()}</p>
+        <p className="points-label">All Time Points</p>
+      </div>
 
       <section className="card upload-card theme-upload upload-page-card">
         <h2 className="upload-heading">Upload photos of your trash</h2>
@@ -334,8 +334,8 @@ export function UploadPage({ user, onGainPoint }) {
       )}
 
       {currentItem?.analysis && (
-        <section className="card result-card theme-result">
-          <h3>Analysis result (photo {currentIndex + 1})</h3>
+        <section className="card result-card theme-result upload-page-result-card">
+          <h3 className="result-card-heading">Analysis result (photo {currentIndex + 1})</h3>
           {currentItem.analysis.isValidTrashImage === false ? (
             <div className="analysis-error-box">
               <p className="analysis-error-text">
@@ -347,36 +347,34 @@ export function UploadPage({ user, onGainPoint }) {
             </div>
           ) : (
             <>
-              <div className="result-row">
-                <span className="result-label">Type</span>
-                <span className="result-value result-category">
-                  {currentItem.analysis.category || '—'}
-                </span>
-              </div>
-              <div className="result-row">
-                <span className="result-label">Name</span>
-                <span className="result-value">{currentItem.analysis.name}</span>
-              </div>
-              <div className="result-row">
-                <span className="result-label">Material(s)</span>
-                <span className="result-value">
-                  {Array.isArray(currentItem.analysis.materials)
-                    ? currentItem.analysis.materials.join(', ')
-                    : currentItem.analysis.materials}
-                </span>
-              </div>
-              <div className="result-row">
-                <span className="result-label">Recycling method</span>
-                <span className="result-value">
-                  {currentItem.analysis.recyclingMethod}
-                </span>
-              </div>
-              <div className="result-row">
-                <span className="result-label">Reuse ideas</span>
-                <span className="result-value">
-                  {currentItem.analysis.reuseMethod}
-                </span>
-              </div>
+              <table className="result-table">
+                <tbody>
+                  <tr>
+                    <th scope="row">Type</th>
+                    <td className="result-category">{currentItem.analysis.category || '—'}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Name</th>
+                    <td>{currentItem.analysis.name}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Material(s)</th>
+                    <td>
+                      {Array.isArray(currentItem.analysis.materials)
+                        ? currentItem.analysis.materials.join(', ')
+                        : currentItem.analysis.materials}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Recycling method</th>
+                    <td>{currentItem.analysis.recyclingMethod}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Reuse ideas</th>
+                    <td>{currentItem.analysis.reuseMethod}</td>
+                  </tr>
+                </tbody>
+              </table>
               {currentItem.analysis.category === 'waste' && (
                 <p className="waste-no-points-note">Waste does not earn points.</p>
               )}

@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react'
 import { loadUsers, saveUsers, loadCurrentUser, saveCurrentUser } from './utils/storage'
 import { LoginPage, UploadPage, TopBar, StatsPage } from './components'
 import { HomePage } from './components/HomePage/HomePage'
+import { FloatingCat } from './components/FloatingCat/FloatingCat'
 
 const DEFAULT_TREE = { id: 0, x: 0, z: 0, paletteId: 'sakura', displayStage: 1 }
 
@@ -129,6 +130,7 @@ function App() {
 
   return (
     <div className="app-shell">
+      <FloatingCat />
       <TopBar
         user={currentUser}
         activeTab={activeTab}
