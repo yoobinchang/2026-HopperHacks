@@ -17,6 +17,7 @@ export function TopBar({ user, activeTab, onTabChange, onLogout }) {
 
   return (
     <header className="top-bar theme-bar">
+      <div className="top-bar-cover" aria-hidden="true" />
       <div className="top-bar-row top-bar-row-main">
         <span className="logo-text">EcoSnap</span>
         <div className="top-bar-right" ref={menuRef}>

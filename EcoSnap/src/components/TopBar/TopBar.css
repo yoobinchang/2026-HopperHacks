@@ -8,13 +8,28 @@
   width: 100%;
   font-family: "Alice", serif;
   margin-bottom: 5rem;
+  position: relative;
 }
 
 .top-bar.theme-bar {
-  background: var(--color-terracotta);
+  background-image: url("../../assets/sakura.png");
+  background-size: 35%;
+  background-position: center;
 }
 
-/* First row: logo (left) and user (right) */
+/* Transparent white/cream cover over top bar, below nav bar */
+.top-bar-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12rem;
+  background: rgba(252, 251, 239, 0.32);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* First row: logo (left) and user (right) — above the cover */
 .top-bar-row.top-bar-row-main {
   display: flex;
   align-items: center;
@@ -22,6 +37,8 @@
   padding: 14px 24px;
   gap: 16px;
   height: 10rem;
+  position: relative;
+  z-index: 2;
 }
 
 .logo-text {
@@ -94,24 +111,27 @@
   background: var(--color-cream);
 }
 
-/* Tab row — each tab fills exactly half */
+/* Tab row — below the top bar background, on top of the cover */
 .nav-tabs-row {
   display: flex;
   align-items: stretch;
   padding: 0;
-  background: var(--color-terracotta);
+  margin-top: 1.25rem;
+  background: var(--color-copperRose);
   width: 100%;
-  height:5rem;
+  height: 5rem;
+  position: relative;
+  z-index: 3;
 }
 
 .nav-tab {
   flex: 1;
   padding: 14px 20px 18px;
-  font-size: 17px;
+  font-size: 25px;
   font-weight: 700;
   border: none;
   cursor: pointer;
-  background: var(--color-terracotta);
+  background: var(--color-copperRose);
   color: var(--color-beige);
   border-radius: 14px 14px 0 0;
   font-family: "Alice", serif;
