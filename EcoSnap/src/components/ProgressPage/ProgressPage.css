@@ -1,42 +1,141 @@
+/* â”€â”€ Progress Page â”€â”€ */
 .progress-page {
+  font-family: "Alice", serif;
+  background: linear-gradient(180deg, #E0CBB9 0%, #e8e0d8 24%);
   padding: 0 !important;
   gap: 0;
 }
 
-/* Chart section - same layout as tree-section */
+/* â”€â”€ Stat chips row (reuses recycling-stat classes) â”€â”€ */
+.pg-stats-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px 20px 0;
+  margin-bottom: 0;
+}
+
+.recycling-stat {
+  min-width: 110px;
+  padding: 12px 14px 10px;
+  border-radius: 16px;
+  text-align: center;
+  border: 2px solid;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.recycling-stat:hover {
+  transform: translateY(-3px);
+}
+
+.recycling-stat-value {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  font-family: "Alice", serif;
+  line-height: 1;
+}
+
+.recycling-stat-label {
+  display: block;
+  font-size: 11px;
+  color: #6B705C;
+  margin-top: 3px;
+  font-family: "Alice", serif;
+  line-height: 1.2;
+}
+
+.recycling-stat-pct {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: "Alice", serif;
+  letter-spacing: 0.3px;
+  margin-top: 1px;
+}
+
+/* â”€â”€ Main section â”€â”€ */
 .progress-section {
   position: relative;
   flex: 1;
-  margin: 0 1.75rem 1.75rem;
+  margin: 20px 1.75rem 1.75rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  background: #FFE8D6;
+  border: 1px solid #DDBEA9;
+  border-radius: 20px;
+  box-shadow: 8px 8px 0 rgba(117,75,77,0.12);
+  padding: 24px 20px 20px;
 }
 
-.chart-container {
-  width: 60%;
-  height: 45rem;
-  align-self: center;
-  min-height: 250px;
-  border-radius: 18px;
-  overflow: hidden;
-  border: 2px solid #c8a898;
-  box-shadow: 12px 12px 0 rgba(100, 60, 50, 0.40);
-  background: var(--color-cream);
+/* â”€â”€ Donut chart wrapper â”€â”€ */
+.pg-chart-wrap {
+  width: 100%;
+  max-width: 340px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
 }
 
+/* â”€â”€ Legend â”€â”€ */
+.pg-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.pg-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: "Alice", serif;
+}
+
+.pg-legend-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.pg-legend-label {
+  flex: 1;
+  font-size: 13px;
+  color: #4a3228;
+  font-weight: 500;
+}
+
+.pg-legend-count {
+  font-size: 13px;
+  color: #7a5a50;
+  font-weight: 600;
+}
+
+.pg-legend-pct {
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 42px;
+  text-align: right;
+}
+
+/* â”€â”€ Empty state â”€â”€ */
 .empty-state {
-  width: 80%;
-  height: 50rem;
-  align-self: center;
+  width: 100%;
   min-height: 320px;
-  border-radius: 18px;
-  border: 2px solid #c8a898;
-  box-shadow: 12px 12px 0 rgba(100, 60, 50, 0.40);
-  background: var(--color-cream);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,165 +148,34 @@
   margin: 0 0 8px;
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-dark-brown);
+  color: #4a3228;
+  font-family: "Alice", serif;
 }
 
 .empty-state-hint {
   margin: 0;
-  font-size: 16px;
-  color: var(--color-brown);
-  font-weight: 500;
-}
-
-/* Info below chart - same as tree-info */
-.progress-info {
-  text-align: center;
-  margin-top: 1.75rem;
-  padding-bottom: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.legend-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 0;
-  width: 100%;
-  max-width: 500px;
-  align-self: center;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--color-cream);
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
-}
-
-.legend-color {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-.legend-label {
-  flex: 1;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-dark-brown);
-  letter-spacing: -0.01em;
-}
-
-.legend-value {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-muted-brown);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-  width: 100%;
-  max-width: 600px;
-  align-self: center;
-}
-
-.stat-card {
-  padding: 20px;
-  background: var(--color-cream);
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.stat-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.stat-color-indicator {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.stat-name {
   font-size: 15px;
-  font-weight: 600;
-  color: var(--color-dark-brown);
-  letter-spacing: -0.01em;
+  color: #7a5a50;
+  font-family: "Alice", serif;
 }
 
-.stat-count {
-  margin: 4px 0 0;
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--color-dark-brown);
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-.stat-percentage {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-muted-brown);
-}
-
-.chart-tooltip {
-  background: rgba(45, 26, 16, 0.95);
-  border-radius: 8px;
-  padding: 10px 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.tooltip-label {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fcfbef;
-}
-
-.tooltip-value {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: #fcfbef;
-}
-
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 480px) {
   .progress-section {
-    margin: 0 1.25rem 1.25rem;
-  }
-  
-  .chart-container,
-  .empty-state {
-    width: calc(100% - 2rem);
-  }
-  
-  .stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
+    margin: 16px 1rem 1rem;
   }
 
-  .stat-card {
-    padding: 16px;
+  .pg-stats-row {
+    gap: 8px;
+    padding: 16px 12px 0;
   }
 
-  .stat-count {
-    font-size: 28px;
+  .recycling-stat {
+    min-width: 80px;
+    padding: 10px 10px 8px;
+  }
+
+  .recycling-stat-value {
+    font-size: 22px;
   }
 }

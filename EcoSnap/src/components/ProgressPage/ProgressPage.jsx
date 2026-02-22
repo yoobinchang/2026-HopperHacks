@@ -1,68 +1,91 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
+import { useState } from 'react'
 import './ProgressPage.css'
 
-const COLORS_HEX = {
-  Plastic: '#3B82F6',
-  'Paper & cardboard': '#F59E0B',
-  Glass: '#10B981',
-  Metals: '#8B5CF6',
-  Waste: '#9CA3AF',
+const PAL = {
+  cardboard: '#CB997E',
+  plastic:   '#DDBEA9',
+  metals:    '#A86A65',
+  glass:     '#D8A694',
+  bg:        '#FFE8D6',
 }
 
+const CATEGORIES = [
+  { key: 'Paper & cardboard', label: 'Waste Paper & Cardboard', color: PAL.cardboard },
+  { key: 'Plastic',           label: 'Plastic',                 color: PAL.plastic   },
+  { key: 'Metals',            label: 'Metals',                  color: PAL.metals    },
+  { key: 'Glass',             label: 'Glass',                   color: PAL.glass     },
+]
+
+// ─── SVG donut helpers ────────────────────────────────────────────────────────
+const CX = 160, CY = 160, R = 140, IR = 55
+
+function pt(angle, r) {
+  return [CX + r * Math.cos(angle), CY + r * Math.sin(angle)]
+}
+
+function wedge(a0, a1) {
+  const large = a1 - a0 > Math.PI ? 1 : 0
+  const [x1, y1] = pt(a0, R);  const [x2, y2] = pt(a1, R)
+  const [x3, y3] = pt(a1, IR); const [x4, y4] = pt(a0, IR)
+  return `M${x1} ${y1} A${R} ${R} 0 ${large} 1 ${x2} ${y2} L${x3} ${y3} A${IR} ${IR} 0 ${large} 0 ${x4} ${y4}Z`
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
 export function ProgressPage({ user }) {
-  const stats = user?.recyclingStats || {
-    Plastic: 0,
-    'Paper & cardboard': 0,
-    Glass: 0,
-    Metals: 0,
-    Waste: 0,
-  }
+  const [hovered, setHovered] = useState(null)
 
-  const data = Object.entries(stats)
-    .filter(([_, value]) => value > 0)
-    .map(([name, value]) => ({ name, value }))
+  const stats = user?.recyclingStats || {}
+  const values = CATEGORIES.map(c => Math.max(0, Number(stats[c.key]) || 0))
+  const total  = values.reduce((s, v) => s + v, 0)
+  const dt     = total || 1
 
-  const total = Object.values(stats).reduce((sum, val) => sum + val, 0)
+  // Only categories with value > 0
+  const active = CATEGORIES
+    .map((cat, i) => ({ ...cat, value: values[i], index: i }))
+    .filter(item => item.value > 0)
 
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0]
-      return (
-        <div className="chart-tooltip">
-          <p className="tooltip-label">{data.name}</p>
-          <p className="tooltip-value">{data.value} items</p>
-        </div>
-      )
-    }
-    return null
-  }
-
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-    if (percent < 0.05) return null
-    const RADIAN = Math.PI / 180
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5
-    const x = cx + radius * Math.cos(-midAngle * RADIAN)
-    const y = cy + radius * Math.sin(-midAngle * RADIAN)
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-        fontSize={14}
-        fontWeight={600}
-      >
-        {`${(percent * 100).toFixed(0)}%`}
-      </text>
-    )
-  }
+  // Build slices from active only
+  let cursor = -Math.PI / 2
+  const slices = active.map(item => {
+    const sweep = (item.value / total) * Math.PI * 2
+    const a0    = cursor
+    const a1    = cursor + sweep
+    cursor      = a1
+    return { ...item, a0, a1, mid: (a0 + a1) / 2 }
+  })
 
   return (
     <div className="page progress-page">
-      <div className="ellipse-box">
-        <p className="points-value">{total.toLocaleString()}</p>
-        <p className="points-label">Total Items Recycled</p>
+
+      {/* ── Stat chips ── */}
+      <div style={{
+        display: 'flex', flexWrap: 'wrap', gap: 12,
+        justifyContent: 'center', padding: '20px 20px 0',
+      }}>
+        {CATEGORIES.map((cat, i) => (
+          <div
+            key={cat.key}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(null)}
+            style={{
+              minWidth: 120, padding: '14px 16px 12px',
+              borderRadius: 16, textAlign: 'center',
+              border: `2px solid ${cat.color}`,
+              background: `${cat.color}18`,
+              boxShadow: `4px 4px 0 ${cat.color}44`,
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', gap: 3,
+              cursor: 'pointer', transition: 'transform 0.18s',
+              fontFamily: "'Alice', Georgia, serif",
+            }}
+          >
+            <span style={{ fontSize: 30, fontWeight: 700, color: '#4a3228', lineHeight: 1 }}>{values[i]}</span>
+            <span style={{ fontSize: 11, color: '#6B705C', marginTop: 2, lineHeight: 1.3 }}>{cat.label}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: cat.color }}>
+              {((values[i] / dt) * 100).toFixed(1)}%
+            </span>
+          </div>
+        ))}
       </div>
 
       <div className="progress-section">
@@ -73,59 +96,69 @@ export function ProgressPage({ user }) {
           </div>
         ) : (
           <>
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={data}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomLabel}
-                    outerRadius="65%"
-                    innerRadius={0}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS_HEX[entry.name]} />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
+            {/* ── Donut ── */}
+            <div className="pg-chart-wrap">
+              <svg viewBox="0 0 320 320" width="100%" style={{ maxWidth: 320, overflow: 'visible' }}>
+                <defs>
+                  <filter id="pg-drop" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#a08070" floodOpacity="0.2" />
+                  </filter>
+                </defs>
+
+                {slices.map((sl, i) => {
+                  const isHov   = hovered === sl.index
+                  const explode = isHov ? 10 : 0
+                  return (
+                    <g
+                      key={sl.key}
+                      transform={`translate(${Math.cos(sl.mid) * explode}, ${Math.sin(sl.mid) * explode})`}
+                      style={{ cursor: 'pointer', transition: 'transform 0.2s ease' }}
+                      onMouseEnter={() => setHovered(sl.index)}
+                      onMouseLeave={() => setHovered(null)}
+                    >
+                      <path
+                        d={wedge(sl.a0, sl.a1)}
+                        fill={sl.color}
+                        stroke={PAL.bg}
+                        strokeWidth={isHov ? 2 : 3}
+                        filter="url(#pg-drop)"
+                        opacity={hovered !== null && !isHov ? 0.7 : 1}
+                        style={{ transition: 'opacity 0.18s' }}
+                      />
+                    </g>
+                  )
+                })}
+
+                {/* Centre label */}
+                <text x={CX} y={CY - 10} textAnchor="middle" fontSize="13" fill="#7a5a50" fontFamily="'Alice',Georgia,serif">Total</text>
+                <text x={CX} y={CY + 14} textAnchor="middle" fontSize="24" fontWeight="700" fill="#4a3228" fontFamily="'Alice',Georgia,serif">{total}</text>
+                <text x={CX} y={CY + 32} textAnchor="middle" fontSize="11" fill="#a86a65" fontFamily="'Alice',Georgia,serif">items</text>
+              </svg>
             </div>
 
-            <div className="progress-info">
-              <div className="legend-container">
-                {Object.entries(stats)
-                  .filter(([_, value]) => value > 0)
-                  .map(([name, value]) => (
-                    <div key={name} className="legend-item">
-                      <div className="legend-color" style={{ backgroundColor: COLORS_HEX[name] }} />
-                      <span className="legend-label">{name}</span>
-                      <span className="legend-value">{value} items</span>
-                    </div>
-                  ))}
-              </div>
-
-              <div className="stats-grid">
-                {Object.entries(stats)
-                  .filter(([name]) => name !== 'Waste')
-                  .map(([name, value]) => {
-                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
-                    return (
-                      <div key={name} className="stat-card">
-                        <div className="stat-header">
-                          <div className="stat-color-indicator" style={{ backgroundColor: COLORS_HEX[name] }} />
-                          <span className="stat-name">{name}</span>
-                        </div>
-                        <p className="stat-count">{value}</p>
-                        <p className="stat-percentage">{percentage}%</p>
-                      </div>
-                    )
-                  })}
-              </div>
+            {/* ── Legend — only active categories ── */}
+            <div className="pg-legend">
+              {slices.map(sl => {
+                const isHov = hovered === sl.index
+                const pct   = ((sl.value / total) * 100).toFixed(1)
+                return (
+                  <div
+                    key={sl.key}
+                    className="pg-legend-item"
+                    style={{
+                      background:  isHov ? `${sl.color}22` : 'rgba(255,232,214,0.9)',
+                      border:      `1.5px solid ${isHov ? sl.color : '#DDBEA9'}`,
+                    }}
+                    onMouseEnter={() => setHovered(sl.index)}
+                    onMouseLeave={() => setHovered(null)}
+                  >
+                    <div className="pg-legend-dot" style={{ background: sl.color }} />
+                    <span className="pg-legend-label">{sl.label}</span>
+                    <span className="pg-legend-count">{sl.value} items</span>
+                    <span className="pg-legend-pct" style={{ color: sl.color }}>{pct}%</span>
+                  </div>
+                )
+              })}
             </div>
           </>
         )}
