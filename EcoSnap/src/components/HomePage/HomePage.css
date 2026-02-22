@@ -1,133 +1,213 @@
 @import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
-/* counter box */
-.highlight-card {
-  width: 100vw; /* full screen width */
-  margin-left: calc(50% - 50vw); /* align with screen edges */
-  padding: 2rem;
 
-  position: relative; /* required for overlay */
-  overflow: hidden;   /* keeps overlay inside */
-  background-size: 120%;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.highlight-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; /* THIS is the key */
-  background: #9a5e58cc; /* hex with 80% opacity */
-  z-index: 1;
-}
-.highlight-card > * {
-  position: relative;
-  z-index: 2;
+/* ── Page shell ── */
+.page {
+  background: #e8e0d8;
+  min-height: 100vh;
+  font-family: "Alice", serif;
 }
 
+/* ── Points pill (ellipse) ── */
 .ellipse-box {
   width: 80vw;
-  margin: 2rem auto;
-  padding: 1.5rem 2rem;
+  max-width: 420px;
+  margin: 1.5rem auto 0.5rem;
+  padding: 0.75rem 2rem;
 
   background: #fcfbef;
-  backdrop-filter: blur(6px);
   border-radius: 999px;
-  box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 6px 6px 0 rgba(100, 60, 50, 0.35);
 
-  text-align: center;
-}
-
-.points-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.points-label {
-  margin: 0;
-  font-family: "Alice", serif;
-  font-size: 14px;
-  color: #6b7280;
   text-align: center;
 }
 
 .points-value {
+  margin: 0;
+  font-family: "Alice", serif;
+  font-size: clamp(28px, 8vw, 52px);
+  font-weight: 700;
+  color: #2d1a10;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.points-label {
   margin: 2px 0 0;
   font-family: "Alice", serif;
-  font-size: 64px;
-  font-weight: 700;
-  text-align: center;
-}
-
-/*----------------------*/
-
-
-.actions-card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.actions-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.actions-grid button {
-  flex: 1;
+  font-size: 13px;
+  color: #6b5c50;
 }
 
 .points-unit {
-  margin-left: 4px;
-  font-size: 16px;
-  color: #6b7280;
-}
-
-.tree-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.tree-pill-seed {
-  background: #fefce8;
-  color: #854d0e;
-}
-
-.tree-pill-sprout {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.tree-pill-sapling {
-  background: #e0f2fe;
-  color: #075985;
-}
-
-.tree-pill-big {
-  background: #f3e8ff;
-  color: #6b21a8;
-}
-
-.tree-emoji {
   font-size: 18px;
+  color: #6b7280;
+  margin-left: 4px;
 }
 
-.tree-label {
+/* ── Watering-can note ── */
+.watering-note {
+  text-align: center;
+  font-family: "Alice", serif;
+  font-size: 11px;
+  color: #5a4a40;
+  line-height: 1.5;
+  margin: 0.25rem 0 0.5rem;
+}
+
+/* ── Tree section wrapper (relative so the can can overlay) ── */
+.tree-section {
+  position: relative;
+  width: 90vw;
+  max-width: 420px;
+  margin: 0 auto 1rem;
+}
+
+/* ── Watering can + scan button (top-right overlay) ── */
+.watering-can-area {
+  position: absolute;
+  top: -60px;
+  right: -18px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.watering-can-img {
+  width: 90px;
+  transform: scaleX(-1); /* face left toward the tree */
+  filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.2));
+}
+
+/* Watering can SVG fallback */
+.watering-can-svg {
+  width: 90px;
+  height: 70px;
+}
+
+.scan-btn {
+  background: #fcfbef;
+  border: 2px solid #c8a898;
+  border-radius: 12px;
+  padding: 6px 10px;
+  font-family: "Alice", serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #3d2010;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 rgba(100,60,50,0.3);
   white-space: nowrap;
+  transition: transform 0.1s, box-shadow 0.1s;
 }
 
-@media (max-width: 640px) {
-  .points-row {
-    flex-direction: column;
-    align-items: flex-start;
+.scan-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 rgba(100,60,50,0.35);
+}
+.scan-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(100,60,50,0.3);
+}
+
+/* ── Tree image container ── */
+.tree-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #c8a898;
+  box-shadow: 4px 4px 0 rgba(100,60,50,0.25);
+  background: #b8cfe0; /* sky blue placeholder bg */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tree-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tree-placeholder-text {
+  color: #5a7a9a;
+  font-family: "Alice", serif;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+/* ── Tree info below ── */
+.tree-info {
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.tree-name {
+  font-family: "Alice", serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #3d2010;
+  margin: 0 0 2px;
+}
+
+.tree-progress {
+  font-family: "Alice", serif;
+  font-size: 13px;
+  color: #6b5c50;
+  margin: 0 0 2px;
+}
+
+.tree-cta {
+  font-family: "Alice", serif;
+  font-size: 13px;
+  color: #6b5c50;
+  margin: 0;
+}
+
+/* ── Header ── */
+.page-header {
+  padding: 0.75rem 1rem;
+}
+
+.page-title {
+  font-family: "Alice", serif;
+  font-size: 20px;
+  color: #3d2010;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-family: "Alice", serif;
+  font-size: 13px;
+  color: #6b5c50;
+  margin: 2px 0 0;
+}
+
+/* ── Shake animation ── */
+@keyframes wateringShake {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(-12deg); }
+  40%  { transform: rotate(10deg); }
+  60%  { transform: rotate(-8deg); }
+  80%  { transform: rotate(6deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.watering-can-area.shake .watering-can-svg,
+.watering-can-area:hover .watering-can-svg {
+  animation: wateringShake 0.6s ease-in-out;
+  transform-origin: bottom center;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .watering-can-area {
+    right: -10px;
+    top: -55px;
+  }
+  .watering-can-img,
+  .watering-can-svg {
+    width: 70px;
   }
 }
