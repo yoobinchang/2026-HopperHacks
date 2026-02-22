@@ -18,7 +18,7 @@ html, body, #root {
   padding: 0;
   display: flex;
   flex-direction: column;
-  background: var(--color-terracotta-dark, #7d4d48);
+  background: var(--color-copperRose);
 }
 
 /* Content block: cream block; side margins match nav tab insets (1.5rem) so block aligns with tabs */
@@ -47,14 +47,51 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  animation: contentFadeIn 0.3s ease;
 }
 
-@keyframes contentFadeIn {
+/* No animation on first load (no data-from-tab) */
+.content-block-inner:not([data-from-tab]) {
+  animation: none;
+}
+
+/* My Tree: slide in from left (left to right) when coming from another tab */
+.content-block-inner[data-tab="tree"][data-from-tab] {
+  animation: slideFromLeft 0.4s ease-out forwards;
+}
+
+/* Scanner from My Tree: slide in from right (right to left) */
+.content-block-inner[data-tab="scanner"][data-from-tab="tree"] {
+  animation: slideFromRight 0.4s ease-out forwards;
+}
+
+/* Scanner from My Stats: slide in from left (left to right) */
+.content-block-inner[data-tab="scanner"][data-from-tab="stats"] {
+  animation: slideFromLeft 0.4s ease-out forwards;
+}
+
+/* My Stats: slide in from right (right to left) when coming from another tab */
+.content-block-inner[data-tab="stats"][data-from-tab] {
+  animation: slideFromRight 0.4s ease-out forwards;
+}
+
+@keyframes slideFromRight {
   from {
-    opacity: 0.7;
+    transform: translateX(100%);
+    opacity: 0.9;
   }
   to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateX(0);
     opacity: 1;
   }
 }
@@ -64,7 +101,7 @@ html, body, #root {
   text-align: center;
   font-size: 14px;
   color: #fcfbef;
-  background: var(--color-terracotta-dark, #7d4d48);
+  background: var(--color-copperRose);
   padding: 14px 20px;
   font-family: "Alice", serif;
 }

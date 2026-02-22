@@ -10,6 +10,47 @@ import './UploadPage.css'
 
 const MAX_IMAGES = 10
 
+/** Greyed-out bushier tree outline for upload placeholder */
+function TreeUploadIcon() {
+  return (
+    <svg
+      className="upload-tree-icon"
+      viewBox="0 0 120 140"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      {/* Trunk */}
+      <path
+        d="M50 78 L70 78 L67 140 L53 140 Z"
+        stroke="#9a8b7a"
+        strokeWidth="2.5"
+        fill="#c4b5a4"
+      />
+      {/* Bushy canopy: overlapping soft shapes for a fuller tree */}
+      <ellipse cx="60" cy="35" rx="38" ry="32" stroke="#9a8b7a" strokeWidth="2" fill="none" opacity="0.9" />
+      <ellipse cx="45" cy="48" rx="22" ry="20" stroke="#9a8b7a" strokeWidth="1.8" fill="none" opacity="0.85" />
+      <ellipse cx="78" cy="48" rx="22" ry="20" stroke="#9a8b7a" strokeWidth="1.8" fill="none" opacity="0.85" />
+      <ellipse cx="60" cy="55" rx="28" ry="24" stroke="#9a8b7a" strokeWidth="1.8" fill="none" opacity="0.9" />
+      <ellipse cx="35" cy="62" rx="18" ry="16" stroke="#9a8b7a" strokeWidth="1.5" fill="none" opacity="0.8" />
+      <ellipse cx="85" cy="62" rx="18" ry="16" stroke="#9a8b7a" strokeWidth="1.5" fill="none" opacity="0.8" />
+      <ellipse cx="60" cy="68" rx="32" ry="22" stroke="#9a8b7a" strokeWidth="2" fill="none" opacity="0.9" />
+      <path
+        d="M60 18 Q28 42 22 72 Q18 82 42 82 Q48 58 60 42 Q72 58 78 82 Q102 82 98 72 Q92 42 60 18 Z"
+        stroke="#9a8b7a"
+        strokeWidth="2"
+        fill="none"
+      />
+      <path
+        d="M60 38 Q42 58 40 78 Q38 84 58 84 Q60 68 60 58 Q60 68 62 84 Q82 84 80 78 Q78 58 60 38 Z"
+        stroke="#9a8b7a"
+        strokeWidth="1.5"
+        fill="none"
+      />
+    </svg>
+  )
+}
+
 export function UploadPage({ user, onGainPoint }) {
   const [items, setItems] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -164,16 +205,15 @@ export function UploadPage({ user, onGainPoint }) {
 
   return (
     <div className="page upload-page">
-      <section className="points-capsule">
+      <section className="points-capsule upload-page-points">
         <p className="points-capsule-value">{(user.points ?? 0).toLocaleString()}</p>
         <p className="points-capsule-label">Your Points</p>
       </section>
 
-      <section className="card upload-card theme-upload">
+      <section className="card upload-card theme-upload upload-page-card">
         <h2 className="upload-heading">Upload photos of your trash</h2>
         <p className="upload-description">
-          Add one photo at a time or select multiple at once (up to {MAX_IMAGES}). Each is saved and
-          can be analyzed. You can earn 1 point per photo after recycling. Duplicate photos are not allowed.
+          Upload one or more photos. You can earn 5 points per photo after recycling. Duplicate photos are not allowed.
         </p>
         <label className="upload-area theme-upload-area">
           <input
@@ -184,7 +224,8 @@ export function UploadPage({ user, onGainPoint }) {
             onChange={handleFileChange}
             disabled={!canAddMore}
           />
-          <span>Click here to select pictures of your trash!</span>
+          <TreeUploadIcon />
+          <span className="upload-area-text">click to upload</span>
         </label>
         {hashing && <p className="helper-text">Checking for duplicates…</p>}
         {duplicateCount > 0 && (
@@ -222,7 +263,7 @@ export function UploadPage({ user, onGainPoint }) {
             <div className="upload-actions-row">
               <button
                 type="button"
-                className="primary-button theme-button"
+                className="primary-button theme-button upload-analyze-btn"
                 onClick={handleAnalyze}
                 disabled={!canAnalyze}
               >
@@ -247,24 +288,29 @@ export function UploadPage({ user, onGainPoint }) {
                 >
                   ›
                 </button>
-                <button
-                  type="button"
-                  className="ghost-button nav-action-btn"
-                  onClick={handleRemoveCurrent}
-                  disabled={items.length === 0}
-                  aria-label="Remove this photo"
-                >
-                  Remove
-                </button>
-                <button
-                  type="button"
-                  className="ghost-button nav-action-btn"
-                  onClick={handleClearAll}
-                  disabled={items.length === 0}
-                >
-                  Clear images
-                </button>
               </div>
+              <p className="upload-note">
+                Note: only allow up to ten images; if the pictures overflow in the x direction, allow the user to scroll (hide the scrollbar) and shrink all pictures to the same height but not same width. Turn the images that the user isn&apos;t currently viewing to opacity 50%. Allow the user to click on the arrow buttons or the image of the item to navigate.
+              </p>
+            </div>
+            <div className="upload-actions-row upload-actions-row-extra">
+              <button
+                type="button"
+                className="ghost-button nav-action-btn"
+                onClick={handleRemoveCurrent}
+                disabled={items.length === 0}
+                aria-label="Remove this photo"
+              >
+                Remove
+              </button>
+              <button
+                type="button"
+                className="ghost-button nav-action-btn"
+                onClick={handleClearAll}
+                disabled={items.length === 0}
+              >
+                Clear images
+              </button>
             </div>
           </>
         )}
@@ -350,7 +396,7 @@ export function UploadPage({ user, onGainPoint }) {
                   <p className="success-text">
                     {currentItem.analysis.category === 'waste'
                       ? 'Thanks for recycling! (Waste does not earn points.)'
-                      : 'Nice work! You earned +1 point and your tree grew a little.'}
+                      : 'Nice work! You earned +5 points and your tree grew a little.'}
                   </p>
                 )}
               </div>

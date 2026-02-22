@@ -85,6 +85,9 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
         <p className="points-label">All Time Points</p>
       </div>
 
+      <h2 className="home-forest-title">Your Forest</h2>
+      <p className="home-forest-cta">Scan and recycle trash to earn more points! Click into your forest to add and customize trees.</p>
+
       {/* Tree section */}
       <div className="tree-section">
 
@@ -155,10 +158,7 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
 
         {/* Tree info */}
         <div className="tree-info">
-          <p className="tree-name">{stage?.name ?? "Your Forest"}</p>
-          <p className="tree-cta">Scan and recycle trash to earn more points!
-            Click into your forest to add and customize trees.
-          </p>
+          <p className="tree-name">{stage?.name ?? ""}</p>
         </div>
       </div>
     </div>

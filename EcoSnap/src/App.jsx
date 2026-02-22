@@ -1,5 +1,5 @@
 import './App.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { loadUsers, saveUsers, loadCurrentUser, saveCurrentUser } from './utils/storage'
 import { LoginPage, UploadPage, TopBar, StatsPage } from './components'
 import { HomePage } from './components/HomePage/HomePage'
@@ -31,6 +31,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null)
   const [page, setPage] = useState('login')
   const [activeTab, setActiveTab] = useState('tree')
+  const prevTabRef = useRef(null)
 
   useEffect(() => {
     const initialUsers = loadUsers()
@@ -41,6 +42,10 @@ function App() {
       setPage('home')
     }
   }, [])
+
+  useEffect(() => {
+    prevTabRef.current = activeTab
+  }, [activeTab])
 
   function handleLogin({ username, password, onError }) {
     const nextUsers = { ...users }
@@ -134,7 +139,12 @@ function App() {
         className="content-block"
         data-tab={activeTab}
       >
-        <div className="content-block-inner" key={activeTab}>
+        <div
+          className="content-block-inner"
+          key={activeTab}
+          data-tab={activeTab}
+          data-from-tab={prevTabRef.current !== null ? prevTabRef.current : undefined}
+        >
           {activeTab === 'tree' && (
             <HomePage
               user={currentUser}
