@@ -43,6 +43,7 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
   const [isShaking, setIsShaking] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const shakeIntervalRef = useRef(null);
+  const treeContainerRef = useRef(null);
 
   // Animate points counter 0 → target
   useEffect(() => {
@@ -77,6 +78,23 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
     onGoUpload();
   }
 
+  function handleTreeDoubleClick() {
+    if (!treeContainerRef.current) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      treeContainerRef.current.requestFullscreen();
+    }
+  }
+
+  useEffect(() => {
+    function onFullscreenChange() {
+      setIsFullScreen(!!document.fullscreenElement && document.fullscreenElement === treeContainerRef.current);
+    }
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
   return (
     <div className="page">
       {/* Points pill */}
@@ -103,58 +121,44 @@ export function HomePage({ user, onGoUpload, onTreeStateChange }) {
           <span className="scan-label">Click to Scan Trash!</span>
         </button>
 
-        {/* 3D tree scene — double-click for full screen */}
+        {/* 3D tree scene — double-click for full screen (Fullscreen API) */}
         <div
+          ref={treeContainerRef}
           className="tree-container tree-container-3d"
-          onDoubleClick={() => setIsFullScreen(true)}
+          onDoubleClick={handleTreeDoubleClick}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && e.detail >= 2 && setIsFullScreen(true)}
+          onKeyDown={(e) => e.key === "Enter" && e.detail >= 2 && handleTreeDoubleClick()}
           aria-label="Double-click for full screen"
         >
-          <div className="tree-fullscreen-hint" aria-hidden="true">
-            Double-click for full screen
-          </div>
           {!isFullScreen && (
-            <TreeScene
-              embedded
-              userPoints={user.points ?? 0}
-              userBank={user.treeBank ?? user.points ?? 0}
-              userTrees={user.trees}
-              onBankChange={(bank) => onTreeStateChange?.(bank, user.trees)}
-              onTreesChange={(trees) => onTreeStateChange?.(user.treeBank ?? user.points ?? 0, trees)}
-            />
+            <div className="tree-fullscreen-hint" aria-hidden="true">
+              Double-click for full screen
+            </div>
           )}
+          {isFullScreen && (
+            <>
+              <div className="tree-fullscreen-hint">Double-click to exit</div>
+              <button
+                type="button"
+                className="tree-fullscreen-exit-btn"
+                onClick={() => document.exitFullscreen()}
+                aria-label="Exit full screen"
+              >
+                Exit
+              </button>
+            </>
+          )}
+          <TreeScene
+            embedded
+            userPoints={user.points ?? 0}
+            userBank={user.treeBank ?? user.points ?? 0}
+            userTrees={user.trees}
+            onBankChange={(bank) => onTreeStateChange?.(bank, user.trees)}
+            onTreesChange={(trees) => onTreeStateChange?.(user.treeBank ?? user.points ?? 0, trees)}
+            onDoubleClick={handleTreeDoubleClick}
+          />
         </div>
-
-        {/* Full-screen overlay — double-click to exit */}
-        {isFullScreen && (
-          <div
-            className="tree-fullscreen-overlay"
-            onDoubleClick={() => setIsFullScreen(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Tree view — double-click to exit"
-          >
-            <div className="tree-fullscreen-hint">Double-click to exit</div>
-            <button
-              type="button"
-              className="tree-fullscreen-exit-btn"
-              onClick={() => setIsFullScreen(false)}
-              aria-label="Exit full screen"
-            >
-              Exit
-            </button>
-            <TreeScene
-              embedded
-              userPoints={user.points ?? 0}
-              userBank={user.treeBank ?? user.points ?? 0}
-              userTrees={user.trees}
-              onBankChange={(bank) => onTreeStateChange?.(bank, user.trees)}
-              onTreesChange={(trees) => onTreeStateChange?.(user.treeBank ?? user.points ?? 0, trees)}
-            />
-          </div>
-        )}
 
         {/* Tree info */}
         <div className="tree-info">

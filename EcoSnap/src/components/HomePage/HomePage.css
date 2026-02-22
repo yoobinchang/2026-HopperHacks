@@ -172,6 +172,43 @@
   cursor: pointer;
 }
 
+/* When container is the fullscreen element, fill the entire screen */
+.tree-container-3d:fullscreen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  border: none;
+}
+
+.tree-container-3d:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  border: none;
+}
+
+.tree-container-3d:-moz-full-screen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  border: none;
+}
+
+.tree-container-3d:-ms-fullscreen {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  border: none;
+}
+
 /* Bottom-left hint: double-click for full screen / to exit (glass + brown shadow) */
 .tree-fullscreen-hint {
   position: absolute;
@@ -193,24 +230,16 @@
   box-shadow: 3px 3px 0 rgba(100, 60, 50, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
-/* Full-screen overlay */
-.tree-fullscreen-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: #c8d8e8;
-  cursor: pointer;
-}
-
-.tree-fullscreen-overlay .tree-fullscreen-hint {
-  z-index: 1001;
+.tree-container-3d .tree-fullscreen-hint,
+.tree-container-3d .tree-fullscreen-exit-btn {
+  z-index: 10;
 }
 
 .tree-fullscreen-exit-btn {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 1001;
+  z-index: 10;
   font-family: "Alice", serif;
   font-size: 14px;
   font-weight: 700;

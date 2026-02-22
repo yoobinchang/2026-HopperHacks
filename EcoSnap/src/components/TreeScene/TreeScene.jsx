@@ -713,6 +713,7 @@ export default function TreeScene({
   onBankChange,
   onTreesChange,
   embedded = false,
+  onDoubleClick,
 } = {}) {
   const [points, setPoints] = useState(0)
   const [bank, setBank] = useState(0)
@@ -789,12 +790,13 @@ export default function TreeScene({
   const rootStyle = embedded ? { ...ui.root, position: 'absolute', inset: 0, width: '100%', height: '100%' } : ui.root
 
   return (
-    <div style={rootStyle}>
+    <div style={rootStyle} onDoubleClick={onDoubleClick}>
       <Canvas
         shadows
         camera={{ position: [0, 4, 11], fov: 50 }}
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         gl={{ antialias: true }}
+        onDoubleClick={onDoubleClick}
       >
         <Scene
           trees={treesVal}
